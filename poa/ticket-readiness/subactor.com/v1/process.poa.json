@@ -1,0 +1,96 @@
+{
+  "schema": "poa.process/v1",
+  "process_ref": "poa://subactor.com/process/ticket-readiness/v1",
+  "title": "Decide whether a governed ticket may be executed now, and by whom",
+  "owner": "service:runtime",
+  "input_schema_ref": "schema://subactor.com/ticket/readiness-request/v1",
+  "output_schema_ref": "schema://subactor.com/ticket/readiness-decision/v1",
+  "policy_refs": [
+    "policy://subactor.com/ticket/execution-readiness/v1",
+    "policy://subactor.com/ticket/delegation-coverage/v1"
+  ],
+  "steps": [
+    {
+      "id": "check-contract",
+      "capability_ref": "capability://subactor.com/ticket/contract-compatibility/v1",
+      "kind": "query",
+      "effects": [
+        "read_data"
+      ],
+      "depends_on": [],
+      "requires_approval": false,
+      "timeout_seconds": 10,
+      "max_attempts": 1,
+      "idempotency": "read_only",
+      "verification": [
+        {
+          "capability_ref": "capability://subactor.com/ticket/contract-version-support/v1",
+          "expectation_schema_ref": "schema://subactor.com/ticket/contract-compatibility/v1"
+        }
+      ]
+    },
+    {
+      "id": "resolve-actor",
+      "capability_ref": "capability://subactor.com/ticket/assigned-actor-resolution/v1",
+      "kind": "query",
+      "effects": [
+        "read_data"
+      ],
+      "depends_on": [
+        "check-contract"
+      ],
+      "requires_approval": false,
+      "timeout_seconds": 15,
+      "max_attempts": 2,
+      "idempotency": "read_only",
+      "verification": [
+        {
+          "capability_ref": "capability://subactor.com/ticket/actor-presence/v1",
+          "expectation_schema_ref": "schema://subactor.com/ticket/assigned-actor/v1"
+        }
+      ]
+    },
+    {
+      "id": "check-coverage",
+      "capability_ref": "capability://subactor.com/ticket/delegation-coverage/v1",
+      "kind": "query",
+      "effects": [
+        "read_data"
+      ],
+      "depends_on": [
+        "resolve-actor"
+      ],
+      "requires_approval": false,
+      "timeout_seconds": 15,
+      "max_attempts": 1,
+      "idempotency": "read_only",
+      "verification": [
+        {
+          "capability_ref": "capability://subactor.com/ticket/coverage-completeness/v1",
+          "expectation_schema_ref": "schema://subactor.com/ticket/delegation-coverage/v1"
+        }
+      ]
+    },
+    {
+      "id": "decide-disposition",
+      "capability_ref": "capability://subactor.com/ticket/readiness-decision/v1",
+      "kind": "query",
+      "effects": [
+        "read_data"
+      ],
+      "depends_on": [
+        "check-coverage"
+      ],
+      "requires_approval": false,
+      "timeout_seconds": 10,
+      "max_attempts": 1,
+      "idempotency": "read_only",
+      "verification": [
+        {
+          "capability_ref": "capability://subactor.com/ticket/readiness-decision-shape/v1",
+          "expectation_schema_ref": "schema://subactor.com/ticket/readiness-decision/v1"
+        }
+      ]
+    }
+  ]
+}

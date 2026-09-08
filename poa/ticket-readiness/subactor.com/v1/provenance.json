@@ -1,0 +1,22 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/runtime",
+  "revision": "cca2880ded7433f89480006d65cc8c3f4b6ad6bf",
+  "files": [
+    {
+      "source": "docs/ticket-readiness.poa.json",
+      "destination": "process.poa.json",
+      "sha256": "32d0899401e040f447841b6310bfcd1838df77b1c6602441c61f9b0baa67ddfd"
+    },
+    {
+      "source": "src/ticket-readiness.mjs",
+      "destination": "src/ticket-readiness.mjs",
+      "sha256": "37ef643015059ade39ecc78c464b5fdb3a3c35a11d1e5f33fcbaeb22079e8a34"
+    },
+    {
+      "source": "tests/ticket-readiness.test.mjs",
+      "destination": "tests/ticket-readiness.test.mjs",
+      "sha256": "8cdd5d88949e1aeda9b3f94423339126dbdc76fd79644d7e654fa6f1dd607263"
+    }
+  ]
+}

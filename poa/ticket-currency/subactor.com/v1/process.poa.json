@@ -1,0 +1,64 @@
+{
+  "schema": "poa.process/v1",
+  "process_ref": "poa://subactor.com/process/ticket-currency/v1",
+  "title": "Decide whether a governed ticket is still the current instruction",
+  "owner": "service:runtime",
+  "input_schema_ref": "schema://subactor.com/ticket/currency-request/v1",
+  "output_schema_ref": "schema://subactor.com/ticket/currency-decision/v1",
+  "policy_refs": [
+    "policy://subactor.com/ticket/explicit-currency-relations/v1"
+  ],
+  "steps": [
+    {
+      "id": "read-relations",
+      "capability_ref": "capability://subactor.com/ticket/currency-relations/v1",
+      "kind": "query",
+      "effects": ["read_data"],
+      "depends_on": [],
+      "requires_approval": false,
+      "timeout_seconds": 10,
+      "max_attempts": 1,
+      "idempotency": "read_only",
+      "verification": [
+        {
+          "capability_ref": "capability://subactor.com/ticket/currency-relation-shape/v1",
+          "expectation_schema_ref": "schema://subactor.com/ticket/currency-relations/v1"
+        }
+      ]
+    },
+    {
+      "id": "observe-related-tickets",
+      "capability_ref": "capability://subactor.com/ticket/related-ticket-observation/v1",
+      "kind": "query",
+      "effects": ["read_data"],
+      "depends_on": ["read-relations"],
+      "requires_approval": false,
+      "timeout_seconds": 30,
+      "max_attempts": 2,
+      "idempotency": "read_only",
+      "verification": [
+        {
+          "capability_ref": "capability://subactor.com/ticket/related-ticket-presence/v1",
+          "expectation_schema_ref": "schema://subactor.com/ticket/related-ticket-observation/v1"
+        }
+      ]
+    },
+    {
+      "id": "decide-currency",
+      "capability_ref": "capability://subactor.com/ticket/currency-decision/v1",
+      "kind": "query",
+      "effects": ["read_data"],
+      "depends_on": ["observe-related-tickets"],
+      "requires_approval": false,
+      "timeout_seconds": 10,
+      "max_attempts": 1,
+      "idempotency": "read_only",
+      "verification": [
+        {
+          "capability_ref": "capability://subactor.com/ticket/currency-decision-shape/v1",
+          "expectation_schema_ref": "schema://subactor.com/ticket/currency-decision/v1"
+        }
+      ]
+    }
+  ]
+}

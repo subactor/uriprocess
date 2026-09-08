@@ -1,0 +1,7 @@
+{
+  "schema": "wellmanifest.docs/adoption/v1",
+  "repository": "subactor/uriprocess",
+  "standard": "wellmanifest/docs",
+  "source_revision": "fdb0fcaa7c606dc2503cabb71eff64d5f86ee659",
+  "policy_sha256": "affe2ca5700b8225829d110ef704c793e280efae2349751ab7e3f3ef3303126e"
+}

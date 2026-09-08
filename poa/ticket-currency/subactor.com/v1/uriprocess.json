@@ -1,0 +1,18 @@
+{
+  "schema": "uriprocess.package/v1",
+  "process_ref": "poa://subactor.com/process/ticket-currency/v1",
+  "contract": "process.poa.json",
+  "language": "javascript",
+  "entry": "src/ticket-currency.mjs",
+  "export": "ticketCurrencyDecision",
+  "transport": "stdin-json",
+  "request_fields": [
+    "ticket",
+    "context"
+  ],
+  "base_image": "node:22-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+  "role": "decision-library",
+  "executes_declared_capabilities": false,
+  "authority": "decision-only; no execution grant",
+  "source": "provenance.json"
+}

@@ -1,0 +1,9 @@
+**
+!package.json
+!package-lock.json
+!src/
+!src/**
+!bin.mjs
+!process.poa.json
+!provenance.json
+!uriprocess.json

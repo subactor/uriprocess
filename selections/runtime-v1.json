@@ -1,0 +1,27 @@
+{
+  "schema": "uriprocess.selection/v1",
+  "source_repository": "https://github.com/subactor/runtime",
+  "source_revision": "cca2880ded7433f89480006d65cc8c3f4b6ad6bf",
+  "base_image": "node:22-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+  "processes": [
+    {
+      "contract": "docs/ticket-currency.poa.json",
+      "entry": "src/ticket-currency.mjs",
+      "export": "ticketCurrencyDecision",
+      "files": [
+        "src/ticket-currency.mjs",
+        "src/ticket-readiness.mjs",
+        "tests/ticket-currency.test.mjs"
+      ]
+    },
+    {
+      "contract": "docs/ticket-readiness.poa.json",
+      "entry": "src/ticket-readiness.mjs",
+      "export": "ticketReadinessDecision",
+      "files": [
+        "src/ticket-readiness.mjs",
+        "tests/ticket-readiness.test.mjs"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@subactor/uriprocess-ticket-readiness-subactor.com-v1",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "UNLICENSED",
+  "description": "Decide whether a governed ticket may be executed now, and by whom",
+  "exports": "./src/ticket-readiness.mjs",
+  "bin": {
+    "uriprocess-ticket-readiness": "bin.mjs"
+  },
+  "files": [
+    "src",
+    "bin.mjs",
+    "process.poa.json",
+    "provenance.json",
+    "uriprocess.json"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

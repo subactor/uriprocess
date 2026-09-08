@@ -1,0 +1,38 @@
+{
+  "schema": "uriprocess.catalog/v1",
+  "processes": [
+    {
+      "process_ref": "poa://subactor.com/process/ticket-currency/v1",
+      "path": "poa/ticket-currency/subactor.com/v1",
+      "files": {
+        ".dockerignore": "0ee99b2176193aa7b5d9c2f71a270ca155722d33848c94de75150b31e6499d06",
+        "Dockerfile": "c75c28bb6deff7d75f7a4d6109f35bb9b5cff60b99e47490a20377bd526b9be1",
+        "bin.mjs": "007f89a652f5ab04e3de2f471988fc07225580ceb98f09592d57ebe4a62996fb",
+        "package-lock.json": "4a630509fd79f29678f3c424d56b494f38f83b1d4379d138e35dec7de55631c2",
+        "package.json": "0c2bb9168a654bafe3841844b74c77c1ae7a6ce3b0b8fb6b1e21708a7eac53d6",
+        "process.poa.json": "457bf46144bfdb5469fe60a71b3505822db3b5db56de7b239d5c9831c3619334",
+        "provenance.json": "b00c53a1407aef1c346cb3f3343a48c1d38a3c44af60481f3f4c2ec9ef64f13c",
+        "src/ticket-currency.mjs": "8d143641a4321b0607352231ed1b03e9054aa67f6b2fcf56e2949e6663017e0c",
+        "src/ticket-readiness.mjs": "37ef643015059ade39ecc78c464b5fdb3a3c35a11d1e5f33fcbaeb22079e8a34",
+        "tests/ticket-currency.test.mjs": "972c16627595bade08c43ba7a0edbadb9ddefac26aa60dcf48a5a667d6fc9bb9",
+        "uriprocess.json": "6d6b5b84369405f45d37a22d71e1489442af6ad5f44c6a54e89bd483cf402a06"
+      }
+    },
+    {
+      "process_ref": "poa://subactor.com/process/ticket-readiness/v1",
+      "path": "poa/ticket-readiness/subactor.com/v1",
+      "files": {
+        ".dockerignore": "0ee99b2176193aa7b5d9c2f71a270ca155722d33848c94de75150b31e6499d06",
+        "Dockerfile": "c75c28bb6deff7d75f7a4d6109f35bb9b5cff60b99e47490a20377bd526b9be1",
+        "bin.mjs": "119b867ceb5e66edff2ece1360b6fae1ca10e06f23de3819d9c1db8716dbc815",
+        "package-lock.json": "f4f1f9f4a23092a0061d724def376c3a1cb49dd7b943b2d2fabb093ef2fc5a8c",
+        "package.json": "59f458bcef0fe34cbbde930f5b4273abeb7a30e15f8df6aa1b113930e2efed37",
+        "process.poa.json": "32d0899401e040f447841b6310bfcd1838df77b1c6602441c61f9b0baa67ddfd",
+        "provenance.json": "aab76b6d12eca10b13c8964d2b9417a2fed7d382a7368c1db27e1372274b422a",
+        "src/ticket-readiness.mjs": "37ef643015059ade39ecc78c464b5fdb3a3c35a11d1e5f33fcbaeb22079e8a34",
+        "tests/ticket-readiness.test.mjs": "8cdd5d88949e1aeda9b3f94423339126dbdc76fd79644d7e654fa6f1dd607263",
+        "uriprocess.json": "a619a7cec50dd15e7ffd064744f03aeec95b13e8d3b51515fb4675b2be90184e"
+      }
+    }
+  ]
+}
