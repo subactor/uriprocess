@@ -21,3 +21,7 @@ trusted actor validator for executable decisions; the standalone JSON adapter
 retains fail-closed behavior.
 
 [Packaging, generation, verification and limitations](docs/information/process-packaging.md).
+
+[Native Guard observation and its limits](docs/information/guard-observation.md)
+uses the existing Guard API for exact-revision Git observations. It grants no
+execution or publication authority.
