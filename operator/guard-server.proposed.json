@@ -1,0 +1,49 @@
+{
+  "schema": "organism.guard.server/v1",
+  "state_dir": "/var/lib/uriprocess-guard",
+  "repositories": {
+    "uriprocess": {
+      "path": "/srv/uriprocess-guard/repositories/uriprocess",
+      "tickets": {
+        "TICKET-4": "https://github.com/subactor/uriprocess/issues/4"
+      },
+      "governance_pins": {}
+    }
+  },
+  "principals": {
+    "author": {
+      "roles": [
+        "reader",
+        "planner"
+      ],
+      "repositories": [
+        "uriprocess"
+      ],
+      "token_env": "URIPROCESS_AUTHOR_TOKEN"
+    },
+    "approver": {
+      "roles": [
+        "reader",
+        "approver",
+        "higher_authority"
+      ],
+      "repositories": [
+        "uriprocess"
+      ],
+      "token_env": "URIPROCESS_APPROVER_TOKEN"
+    },
+    "executor": {
+      "roles": [
+        "reader",
+        "executor"
+      ],
+      "repositories": [
+        "uriprocess"
+      ],
+      "token_env": "URIPROCESS_EXECUTOR_TOKEN"
+    }
+  },
+  "executor_id": "executor",
+  "plan_ttl": 600,
+  "allow_local_test_execution": false
+}

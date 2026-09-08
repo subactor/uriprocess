@@ -1,0 +1,13 @@
+{
+  "schema": "uriprocess.guard-export-compatibility/v1",
+  "repository": "https://github.com/subactor/organism-guard",
+  "source_revision": "edb21301fa4ca059f8108b18913c15f1c89ae979",
+  "version": "0.10.0",
+  "contract_sha256": "965f30e2052c1e2182d4d03f441821d2c30f69d369a34e2bdbf0d6be07ccdce3",
+  "python_tree_sha256": "244e6777fc0005b88b34f363bac379fd127231d0fcd779f71d84af1d7de369cc",
+  "uripack_repository": "https://github.com/subactor/uripack",
+  "uripack_revision": "23925ec4b3a5283f51e74b36c4bd33a9cd2820b7",
+  "scope": "native-plan-admission-export-and-artifact-retrieval",
+  "production_approved": false,
+  "uripack_executor_sha256": "ca382024a345d0962ffa8ef8f09c252c76eb5f92c5f2a86309c263bfeaabe949"
+}
