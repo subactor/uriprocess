@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 13,
+  "version": 14,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
-  "updated": "2026-09-09",
-  "review_after": "2026-10-09",
-  "source_revision": "75cf2be8ae3e0732ecebb8ec92208a69e003e10a",
+  "updated": "2026-09-10",
+  "review_after": "2026-10-10",
+  "source_revision": "68189ddf956bf02a1e8f90ce4318eaeeb24a0515",
   "affected_repositories": [
     "subactor/uriprocess"
   ],
@@ -51,7 +51,10 @@
     "repo://subactor/uriprocess/tests/test_repository_application.py",
     "https://github.com/subactor/uriprocess/pull/8",
     "repo://subactor/uriprocess/tools/inspect_repositories.py",
-    "repo://subactor/uriprocess/tests/test_repository_inspection.py"
+    "repo://subactor/uriprocess/tests/test_repository_inspection.py",
+    "repo://subactor/uriprocess/tools/export_poa_consumer.py",
+    "repo://subactor/uriprocess/tests/test_poa_consumer.py",
+    "https://github.com/subactor/uriprocess/issues/17"
   ]
 }
 ---
@@ -806,3 +809,39 @@ which must have an independently observed protected merge before publication.
 This source correction preserves byte identity during extraction and leaves
 publication rules unchanged. The metadata revision identifies the preceding
 URIprocess implementation commit.
+
+### Version 14 — pinned POA consumer projections
+
+`tools/export_poa_consumer.py` exports complete, explicitly selected POA packages
+from an exact URIprocess Git commit and an independently supplied catalog SHA-256.
+It reads committed objects, preserves source bytes and executable modes, rejects
+unlisted files and symlinks, and checks each package with the adopted
+Wellmanifest `poa-node-v1` profile. It never loads the candidate package code.
+The generated `consumer-lock.json` binds the source revision, catalog digest,
+original URI identities and every package file and mode. The exporter is an
+offline projection utility; URIpack planning and protected application retain
+their separate contracts above. A projection does not grant execution authority.
+
+```bash
+python3 tools/export_poa_consumer.py \
+  --source /path/to/uriprocess \
+  --revision 68189ddf956bf02a1e8f90ce4318eaeeb24a0515 \
+  --catalog-sha256 CATALOG_SHA256_FROM_REVIEWED_SOURCE \
+  --process-ref poa://subactor.com/process/ticket-currency/v1 \
+  --process-ref poa://subactor.com/process/ticket-readiness/v1 \
+  --output /path/to/consumer/src/uriprocess
+```
+
+The parent directory must exist and contain no symlink components. The destination
+is reserved exclusively after all source checks pass. The completion lock is
+written last; an interrupted directory is retained for inspection and cannot be
+overwritten by retry. Add `--check` to compare an existing projection against the
+same immutable source without writing. Consumers can use explicit relative
+re-exports inside a source-only mount. Consumer wiring, behavior, supported Node
+versions, distribution contents and production rollout require their own tests.
+
+Eight regression cases cover dirty source isolation, explicit URI selection,
+immutable pins, missing or extra source files, changed blobs and symlinks, forged
+contract identity, destination reuse, and changed consumer bytes or modes.
+Neither catalog checks nor the lock authenticate protected merge or production
+deployment. The catalog remains eleven packages and thirty-one URI identities.
