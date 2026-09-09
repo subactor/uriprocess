@@ -3,15 +3,17 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 6,
+  "version": 7,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "625c28668458b42d38153ae8c981857d0122771d",
-  "affected_repositories": ["subactor/uriprocess"],
+  "source_revision": "0e662bb67364648c41783939749ccfe3c3f7b846",
+  "affected_repositories": [
+    "subactor/uriprocess"
+  ],
   "evidence": [
     "repo://subactor/uriprocess/tools/prepare_uripack.py",
     "repo://subactor/uriprocess/tools/check.py",
@@ -29,7 +31,10 @@
     "https://github.com/subactor/uriprocess/tree/3f107a5825babf1b48c99f287f19fd2128ee5e47",
     "https://github.com/subactor/organism-guard/tree/edb21301fa4ca059f8108b18913c15f1c89ae979",
     "https://github.com/subactor/runtime/tree/cca2880ded7433f89480006d65cc8c3f4b6ad6bf",
-    "https://github.com/subactor/uripack/tree/23925ec4b3a5283f51e74b36c4bd33a9cd2820b7"
+    "https://github.com/subactor/uripack/tree/23925ec4b3a5283f51e74b36c4bd33a9cd2820b7",
+    "repo://subactor/uriprocess/tools/prepare_repositories.py",
+    "repo://subactor/uriprocess/tests/test_repository_plans.py",
+    "repo://subactor/uriprocess/selections/repositories-v1.json"
   ]
 }
 ---
@@ -319,10 +324,121 @@ with source revisions, dependency versions, route sets and wheel digests.
 integration cases in ordinary unittest discovery; otherwise they are explicitly
 skipped. `test-native-packages` requires it and performs the wheel checks too.
 
+### Prepare separate destination repositories
+
+`tools/prepare_repositories.py` prepares one real URIpack plan per explicitly
+named `uriprocess/<repository>` destination. The versioned mapping is
+`selections/repositories-v1.json`; it pins the packaging repository at
+`0e662bb67364648c41783939749ccfe3c3f7b846` and reads both upstream selections
+from that revision's Git objects. Original runtime and connector files still
+come from their exact revisions listed above. Dirty selection files in the
+packaging checkout cannot change the chosen inputs.
+
+| Proposed repository | Preserved package | URI count |
+| --- | --- | --- |
+| `uriprocess/ticket-currency` | POA ticket-currency v1 | 1 |
+| `uriprocess/ticket-readiness` | POA ticket-readiness v1 | 1 |
+| `uriprocess/ticket-lifecycle` | subactor-ticket-lifecycle 0.1.0 | 1 |
+| `uriprocess/account-twin` | subactor-account-twin 0.1.0 | 10 |
+| `uriprocess/llm-account-hub` | subactor-llm-account-hub 0.1.0 | 4 |
+| `uriprocess/managed-tunnel` | subactor-managed-tunnel 0.1.0 | 1 |
+| `uriprocess/secret-intake` | subactor-secret-intake 0.2.0 | 2 |
+| `uriprocess/credential-harvest` | subactor-credential-harvest 0.1.1 | 1 |
+
+These names are proposed Git repository destinations. Existing URI authorities,
+Python distribution names, npm scopes, versions and runtime ownership remain
+unchanged. A native connector's routes stay together in its existing package.
+This local tool contract does not assert a cross-repository ownership transfer.
+
+```bash
+export PYTHONPATH=/path/to/uripack/uripack/src
+python3 tools/prepare_repositories.py \
+  --selection selections/repositories-v1.json \
+  --package-source /path/to/uriprocess \
+  --source runtime=/path/to/runtime \
+  --source connectors=/path/to/connectors \
+  --workspace /private/recovery/new-repository-plans
+```
+
+Supply exactly the named source IDs. The new workspace must be disjoint from
+all three repositories, including the packaging checkout; its own `.subactor/`
+directory is therefore unsuitable. Existing outputs and symlink components are
+rejected. Preparation has no Git write, network call or Guard admission step.
+
+The output contains immutable-source candidates, `plans/<repository>.json`,
+`repository-selection.json`, and the final `repository-plans.json` index with
+21 URI-to-repository mappings, eight plan hashes and expected artifact digests.
+The empty `repositories/` parent is reserved for separate guarded extractions.
+Each plan includes only one original package and its generated
+`repository-targets/<repository>.json` record. That record binds the target
+repository, package path, upstream revisions, selection hash and original URI
+set into the actual URIpack plan digest. Changing the target record after
+planning fails source-drift verification before Guard admission.
+
+All original package paths remain inside URIpack's layout. For example, after
+separate guarded application the currency package root is:
+
+```text
+repositories/ticket-currency/packs/ticket-currency/tree/poa/ticket-currency/subactor.com/v1/
+```
+
+Run native package commands from the index's `package_root` under each plan's
+`target_root`. No flattening, import rewrite or universal runtime wrapper is
+introduced. The destination record is outside the original package's file set.
+
+The batch index is written only after every selection has exact mapping coverage
+and globally unique URI ownership. A failed preparation can leave diagnostic
+candidates or individual plans; treat an output without the final index as an
+incomplete batch and retry in a new workspace. The index is a local planning
+record, not signed publication authority. Operators must review and bind each
+actual plan through the protected bridge; never use an index's target string as
+authority to create, push or transfer a remote repository.
+
+Apply and verify each reviewed plan through the existing `uripack apply` and
+`uripack verify` commands described above, selecting its own plan file. There is
+no automatic batch admission: approval of one package does not admit another.
+Repository initialization, governance adoption, protected CI, remote publication
+and production routing need their own implementation and observed evidence.
+
+```bash
+make test-repository-plans \
+  URIPROCESS_SOURCE=/path/to/runtime \
+  URIPROCESS_CONNECTORS_SOURCE=/path/to/connectors
+```
+
+Local validation on 2026-09-09 used the same pinned URIpack checkout as above.
+The full Python suite passed 38 tests without skips. Eight new tests cover
+separate guarded extraction of all eight packages, original-file comparison
+against both packaging and upstream Git objects, retained URI sets and executable
+bits, destination-record drift, denied admission, mapping gaps and collisions,
+dirty selection checkouts, explicit sources, occupied outputs and symlink paths.
+The original upstream suites run inside each extraction's test Guard check.
+The standalone CLI also produced eight plans and 21 URI mappings without
+materializing any extraction target. These observations establish local planning
+and test extraction only.
+
+The generated candidates also passed offline package installation checks:
+17 original POA tests ran against installed npm packages, and all 45 native
+Python cases passed against both source copies and six installed wheels with
+matching test identities and all nineteen native bindings. This continuation
+used Python's preinstalled `urirun 0.4.115`, satisfying the original dependency
+range; the earlier 0.4.200 observation above belongs to the preceding run.
+Native verification receipt SHA-256: `84d8a18be63af7f4d42b15990ed7b067ed8d43781a437a81e9ae0b80d1ad2478`.
+Raw reports and build output remain in private recovery storage.
+
+The pinned Docs checker passed. Platform `artifacts:build` and
+`artifacts:check` also passed with 713 valid entries and no drift. Build output
+was redirected through `--out` to private recovery storage to preserve existing
+Platform work; this repository remains outside that registry's coverage.
+
 <!-- docs:section limitations -->
 ## Limitations
 
 The two runtime selections and six native connector packages are covered.
+The `uriprocess/*` destinations are proposals: read-only GitHub API observation
+on 2026-09-09 returned HTTP 404 for both the organization and user handle
+`uriprocess`. Remote existence and access are unconfirmed; no destination
+repository was created, published or transferred by this change.
 Other `subactor/*` processes, capability DAG execution, production routing,
 source removal and package registry publication are not established by these checks. The standalone
 readiness adapter still rejects decisions requiring a trusted callback when
