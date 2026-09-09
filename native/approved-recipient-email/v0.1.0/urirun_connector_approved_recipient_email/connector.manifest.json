@@ -1,0 +1,16 @@
+{
+  "id": "approved-recipient-email",
+  "name": "Approved Recipient Email",
+  "status": "stable",
+  "category": "Communication",
+  "summary": "Exact, grant-gated delivery for a ticket-approved recipient list.",
+  "description": "Plans and preflights the deployment-owned external SMTP transport. Delivery requires a signed one-time grant bound to the exact message plan; callers cannot select SMTP, Vault, sender, or actor authority.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["email"],
+  "adapterKinds": ["local-function"],
+  "routes": [
+    "email://approved-recipients/message/command/send"
+  ]
+}

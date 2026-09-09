@@ -1,0 +1,43 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/platform",
+  "revision": "0102f2518e8bc1081447f373783503ab3b8d122f",
+  "files": [
+    {
+      "source": "urirun-connectors/urirun-connector-platform-uri-blueprints/pyproject.toml",
+      "destination": "pyproject.toml",
+      "mode": 420,
+      "sha256": "7674037efbd3f00783f6169428ccad03bf65c1b1e08e5c14bec0ba9e07aa2bb9"
+    },
+    {
+      "source": "urirun-connectors/urirun-connector-platform-uri-blueprints/tests/__init__.py",
+      "destination": "tests/__init__.py",
+      "mode": 420,
+      "sha256": "6bc75682fe1877033f2ba42742217fb94c884a4ee6e26a606bc1fd087c8583de"
+    },
+    {
+      "source": "urirun-connectors/urirun-connector-platform-uri-blueprints/tests/test_platform_uri_blueprints.py",
+      "destination": "tests/test_platform_uri_blueprints.py",
+      "mode": 420,
+      "sha256": "66917ae107a0a67df1b732a28254f81e9369cde27d4c8e39ed656d5fdce12096"
+    },
+    {
+      "source": "urirun-connectors/urirun-connector-platform-uri-blueprints/urirun_connector_platform_uri_blueprints/__init__.py",
+      "destination": "urirun_connector_platform_uri_blueprints/__init__.py",
+      "mode": 420,
+      "sha256": "c2660d1bc2aa8c980344c2dfad145210279acb35dfdcfb1d73d3e326149fcfcb"
+    },
+    {
+      "source": "urirun-connectors/urirun-connector-platform-uri-blueprints/urirun_connector_platform_uri_blueprints/connector.manifest.json",
+      "destination": "urirun_connector_platform_uri_blueprints/connector.manifest.json",
+      "mode": 420,
+      "sha256": "f65e2989388b6b220e5bfab336ee89a9c8e8d56c0b5f9350de1868a02b1d0c66"
+    },
+    {
+      "source": "urirun-connectors/urirun-connector-platform-uri-blueprints/urirun_connector_platform_uri_blueprints/core.py",
+      "destination": "urirun_connector_platform_uri_blueprints/core.py",
+      "mode": 420,
+      "sha256": "95330faf115a47fb7d704a6ec409b5a45afd43cc0d4ad5e63ef41af0e8c85b32"
+    }
+  ]
+}

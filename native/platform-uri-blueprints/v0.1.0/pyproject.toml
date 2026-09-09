@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-platform-uri-blueprints"
+version = "0.1.0"
+description = "Governed structural compiler bindings owned by the platform repository"
+requires-python = ">=3.10"
+dependencies = ["urirun>=0.4.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.entry-points."urirun.bindings"]
+platform-uri-blueprints = "urirun_connector_platform_uri_blueprints.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_platform_uri_blueprints*"]
+
+[tool.setuptools.package-data]
+urirun_connector_platform_uri_blueprints = ["connector.manifest.json"]

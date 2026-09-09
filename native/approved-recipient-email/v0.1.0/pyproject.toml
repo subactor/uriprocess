@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-approved-recipient-email"
+version = "0.1.0"
+description = "Grant-gated exact adapter for approved recipient email delivery"
+requires-python = ">=3.10"
+dependencies = ["urirun>=0.4.14"]
+
+[project.entry-points."urirun.bindings"]
+approved-recipient-email = "urirun_connector_approved_recipient_email.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_approved_recipient_email*"]
+
+[tool.setuptools.package-data]
+urirun_connector_approved_recipient_email = ["connector.manifest.json"]

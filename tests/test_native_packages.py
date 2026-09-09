@@ -158,13 +158,14 @@ class NativePackageTests(unittest.TestCase):
             for name in package["files"]:
                 self.assertEqual((extracted / name).read_bytes(), (ROOT / package["path"] / name).read_bytes())
 
-    def test_current_selection_extracts_control_connectors_and_reproduces_catalog(self):
+    def test_historical_v3_selection_extracts_unchanged_control_connectors(self):
         from uripack_refactor.executor import apply_plan, verify_artifact
         config = json.loads((ROOT / "selections/connectors-v3.json").read_text())
         plan = prepare(config, self.source, self.root / "current")
         candidate = self.root / "current/candidate"
-        self.assertEqual((candidate / "native-catalog.json").read_bytes(), (ROOT / "native-catalog.json").read_bytes())
         packages = json.loads((candidate / "native-catalog.json").read_text())["packages"]
+        current = {p["path"]: p for p in json.loads((ROOT / "native-catalog.json").read_text())["packages"]}
+        self.assertEqual(packages, [current[p["path"]] for p in packages])
         self.assertEqual(len(packages), 6)
         self.assertEqual(sum(len(p["public_uris"]) for p in packages), 19)
         result = apply_plan(plan, TestGuard())

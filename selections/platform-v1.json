@@ -1,0 +1,39 @@
+{
+  "schema": "uriprocess.native-selection/v1",
+  "source_repository": "https://github.com/subactor/platform",
+  "source_revision": "0102f2518e8bc1081447f373783503ab3b8d122f",
+  "packages": [
+    {
+      "package_root": "urirun-connectors/urirun-connector-platform-uri-blueprints",
+      "manifest": "urirun_connector_platform_uri_blueprints/connector.manifest.json",
+      "public_uris": [
+        "repo://workspace/uri-blueprints/communications/command/implement",
+        "repo://workspace/uri-blueprints/project-orchestration/command/implement",
+        "repo://workspace/uri-blueprints/secret-intake/command/implement"
+      ],
+      "files": [
+        "urirun-connectors/urirun-connector-platform-uri-blueprints/pyproject.toml",
+        "urirun-connectors/urirun-connector-platform-uri-blueprints/tests/__init__.py",
+        "urirun-connectors/urirun-connector-platform-uri-blueprints/tests/test_platform_uri_blueprints.py",
+        "urirun-connectors/urirun-connector-platform-uri-blueprints/urirun_connector_platform_uri_blueprints/__init__.py",
+        "urirun-connectors/urirun-connector-platform-uri-blueprints/urirun_connector_platform_uri_blueprints/connector.manifest.json",
+        "urirun-connectors/urirun-connector-platform-uri-blueprints/urirun_connector_platform_uri_blueprints/core.py"
+      ]
+    },
+    {
+      "package_root": "urirun-connectors/urirun-connector-approved-recipient-email",
+      "manifest": "urirun_connector_approved_recipient_email/connector.manifest.json",
+      "public_uris": [
+        "email://approved-recipients/message/command/send"
+      ],
+      "files": [
+        "urirun-connectors/urirun-connector-approved-recipient-email/pyproject.toml",
+        "urirun-connectors/urirun-connector-approved-recipient-email/tests/__init__.py",
+        "urirun-connectors/urirun-connector-approved-recipient-email/tests/test_approved_recipient_email.py",
+        "urirun-connectors/urirun-connector-approved-recipient-email/urirun_connector_approved_recipient_email/__init__.py",
+        "urirun-connectors/urirun-connector-approved-recipient-email/urirun_connector_approved_recipient_email/connector.manifest.json",
+        "urirun-connectors/urirun-connector-approved-recipient-email/urirun_connector_approved_recipient_email/core.py"
+      ]
+    }
+  ]
+}

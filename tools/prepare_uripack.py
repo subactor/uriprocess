@@ -11,15 +11,28 @@ from pathlib import Path
 from generate import encode, generate
 
 
-def prepare(config, source, workspace):
+def prepare(config, source, workspace, *, selection_root=None):
     from uripack_refactor.planner import build_plan
 
-    source, workspace = Path(source).resolve(), Path(workspace).resolve()
-    if source == workspace or source in workspace.parents or workspace in source.parents:
+    batch = config.get("schema") == "uriprocess.native-batch-selection/v1"
+    workspace = Path(workspace).resolve()
+    if batch:
+        from generate_native_catalog import generate_catalog, selected_groups
+        if selection_root is None:
+            raise ValueError("Native batch requires an explicit selection root")
+        selected_groups(config, selection_root, source)
+        roots = [Path(value).resolve() for value in source.values()]
+    else:
+        source = Path(source).resolve()
+        roots = [source]
+    if any(root == workspace or root in workspace.parents or workspace in root.parents for root in roots):
         raise ValueError("Workspace and source must be disjoint")
     workspace.mkdir(parents=True, exist_ok=False)
     candidate = workspace / "candidate"
-    if config.get("schema") == "uriprocess.native-selection/v1":
+    if batch:
+        generate_catalog(config, selection_root, source, candidate)
+        processes = json.loads((candidate / "native-catalog.json").read_text())["packages"]
+    elif config.get("schema") == "uriprocess.native-selection/v1":
         from generate_native import generate_native
         generate_native(config, source, candidate)
         processes = json.loads((candidate / "native-catalog.json").read_text())["packages"]
@@ -44,9 +57,14 @@ def prepare(config, source, workspace):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--selection", type=Path, required=True)
-    parser.add_argument("--source", type=Path, required=True)
+    mapping = parser.add_mutually_exclusive_group(required=True)
+    mapping.add_argument("--source", type=Path)
+    mapping.add_argument("--source-map", action="append", metavar="NAME=PATH")
+    parser.add_argument("--selection-root", type=Path)
     parser.add_argument("--workspace", type=Path, required=True)
     args = parser.parse_args()
-    plan = prepare(json.loads(args.selection.read_text()), args.source, args.workspace)
+    from generate_native_catalog import source_mapping
+    source = source_mapping(args.source_map) if args.source_map else args.source
+    plan = prepare(json.loads(args.selection.read_text()), source, args.workspace, selection_root=args.selection_root)
     print(json.dumps({"plan_sha256": plan["plan_sha256"], "target": plan["target_root"],
                       "status": "planned", "execution_authority": False}))

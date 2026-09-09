@@ -58,7 +58,11 @@ def matching_test_cases(source_report, installed_report):
 def check(root, source, output, builder):
     from packaging.requirements import Requirement
 
-    root, source, output = Path(root).resolve(), Path(source).resolve(), Path(output).absolute()
+    root, output = Path(root).resolve(), Path(output).absolute()
+    sources = ({repository: Path(path).resolve() for repository, path in source.items()}
+               if isinstance(source, dict) else None)
+    if sources is None:
+        source = Path(source).resolve()
     if output.exists() or output.is_symlink():
         raise ValueError("Verification output must be new")
     catalog = json.loads((root / "native-catalog.json").read_text())
@@ -82,6 +86,10 @@ def check(root, source, output, builder):
                 if path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
                     raise ValueError("Native package integrity mismatch")
             provenance = json.loads((base / "provenance.json").read_text())
+            if sources is not None:
+                if provenance["repository"] not in sources:
+                    raise ValueError("Explicit source repository mapping is incomplete")
+                source = sources[provenance["repository"]]
             destinations = [item["destination"] for item in provenance["files"]]
             if (len(destinations) != len(set(destinations))
                     or set(destinations) != actual - {"provenance.json", "uriprocess.json"}):
@@ -151,6 +159,7 @@ assert routes == expected, 'Installed URI bindings differ from native manifest'
                 run([sys.executable, "-c", probe, str(installed), metadata["native_distribution"],
                      json.dumps(package["public_uris"])], temporary, installed)
                 results.append({"id": package["id"], "source_revision": provenance["revision"],
+                    "source_repository": provenance["repository"],
                     "public_uris": package["public_uris"], "wheel": str(wheels[0].relative_to(output)),
                     "wheel_sha256": hashlib.sha256(wheels[0].read_bytes()).hexdigest(),
                     "dependencies": dependencies, "source_tests": "passed", "installed_tests": "passed",
@@ -170,8 +179,12 @@ assert routes == expected, 'Installed URI bindings differ from native manifest'
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
-    parser.add_argument("--source", type=Path, required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--source", type=Path)
+    source.add_argument("--source-map", action="append", metavar="REPOSITORY=PATH")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--builder-python", default=sys.executable)
     args = parser.parse_args()
-    print(json.dumps(check(args.root, args.source, args.output, args.builder_python)))
+    from generate_native_catalog import source_mapping
+    source = source_mapping(args.source_map) if args.source_map else args.source
+    print(json.dumps(check(args.root, source, args.output, args.builder_python)))

@@ -35,11 +35,11 @@ class StandardAdoptionTests(unittest.TestCase):
                 shutil.copytree(ROOT / record["path"], target / record["path"])
         return target
 
-    def test_exact_bundle_checks_all_eight_real_packages_and_twenty_one_uris(self):
+    def test_exact_bundle_checks_all_ten_real_packages_and_twenty_five_uris(self):
         result = check_catalogs(ROOT)
         self.assertEqual(result["status"], "passed")
-        self.assertEqual(len(result["packages"]), 8)
-        self.assertEqual(result["public_uri_count"], 21)
+        self.assertEqual(len(result["packages"]), 10)
+        self.assertEqual(result["public_uri_count"], 25)
         self.assertEqual({p["profile"] for p in result["packages"]}, {"poa-node-v1", "python-native-v1"})
         self.assertEqual(result["standard_receipt"]["version"], "0.1.0")
         self.assertTrue(result["standard_receipt"]["bundle_verified"])

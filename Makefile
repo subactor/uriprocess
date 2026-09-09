@@ -21,9 +21,9 @@ test-native-export:
 	test -n "$(URIPACK_REPOSITORY)" -a -n "$(GUARD_REPOSITORY)" -a -n "$(NATIVE_OUTPUT)"
 	python3 tools/verify_native_export.py --uripack-repository "$(URIPACK_REPOSITORY)" --guard-repository "$(GUARD_REPOSITORY)" --output "$(NATIVE_OUTPUT)"
 test-native-packages:
-	test -n "$(URIPROCESS_CONNECTORS_SOURCE)" -a -n "$(NATIVE_OUTPUT)" -a -n "$(BUILDER_PYTHON)"
+	test -n "$(URIPROCESS_CONNECTORS_SOURCE)" -a -n "$(URIPROCESS_PLATFORM_SOURCE)" -a -n "$(NATIVE_OUTPUT)" -a -n "$(BUILDER_PYTHON)"
 	URIPROCESS_CONNECTORS_SOURCE="$(URIPROCESS_CONNECTORS_SOURCE)" python3 -m unittest discover -s tests -p test_native_packages.py -v
-	python3 tools/check_native.py --source "$(URIPROCESS_CONNECTORS_SOURCE)" --output "$(NATIVE_OUTPUT)" --builder-python "$(BUILDER_PYTHON)"
+	python3 tools/check_native.py --source-map "https://github.com/subactor/connectors=$(URIPROCESS_CONNECTORS_SOURCE)" --source-map "https://github.com/subactor/platform=$(URIPROCESS_PLATFORM_SOURCE)" --output "$(NATIVE_OUTPUT)" --builder-python "$(BUILDER_PYTHON)"
 pack:
 	python3 tools/check.py --pack
 test-repository-plans:
