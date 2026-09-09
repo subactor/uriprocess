@@ -3,15 +3,17 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 6,
+  "version": 9,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "625c28668458b42d38153ae8c981857d0122771d",
-  "affected_repositories": ["subactor/uriprocess"],
+  "source_revision": "f1bb2b3020585bb0ef32a44997d07ef733e20d75",
+  "affected_repositories": [
+    "subactor/uriprocess"
+  ],
   "evidence": [
     "repo://subactor/uriprocess/tools/prepare_uripack.py",
     "repo://subactor/uriprocess/tools/check.py",
@@ -29,7 +31,14 @@
     "https://github.com/subactor/uriprocess/tree/3f107a5825babf1b48c99f287f19fd2128ee5e47",
     "https://github.com/subactor/organism-guard/tree/edb21301fa4ca059f8108b18913c15f1c89ae979",
     "https://github.com/subactor/runtime/tree/cca2880ded7433f89480006d65cc8c3f4b6ad6bf",
-    "https://github.com/subactor/uripack/tree/23925ec4b3a5283f51e74b36c4bd33a9cd2820b7"
+    "https://github.com/subactor/uripack/tree/23925ec4b3a5283f51e74b36c4bd33a9cd2820b7",
+    "repo://subactor/uriprocess/tools/prepare_repositories.py",
+    "repo://subactor/uriprocess/tests/test_repository_plans.py",
+    "repo://subactor/uriprocess/selections/repositories-v1.json",
+    "repo://subactor/uriprocess/tools/verify_repositories.py",
+    "repo://subactor/uriprocess/tests/test_repository_verification.py",
+    "repo://subactor/uriprocess/tools/apply_repositories.py",
+    "repo://subactor/uriprocess/tests/test_repository_application.py"
   ]
 }
 ---
@@ -74,9 +83,10 @@ uses uripack's extraction-plan contract, not a Strategy execution receipt.
 ## Evidence
 
 Local validation on 2026-09-09 used Python 3, Node 22.23.1, Docker 29.1.3 and
-the uripack source revision linked in metadata. The uriprocess source revision
-identifies the previously published implementation base. The listed source and
-test entry points define the extension; PR #7 carries the source for review.
+the uripack source revision linked in metadata. The metadata source revision
+identifies the implementation base of this local increment. PR #7 contains the
+earlier package integration; subsequent repository planning, verification and
+batch application remain local changes until separately published.
 
 | Check | Observed scope and result |
 | --- | --- |
@@ -319,10 +329,252 @@ with source revisions, dependency versions, route sets and wheel digests.
 integration cases in ordinary unittest discovery; otherwise they are explicitly
 skipped. `test-native-packages` requires it and performs the wheel checks too.
 
+### Prepare separate destination repositories
+
+`tools/prepare_repositories.py` prepares one real URIpack plan per explicitly
+named `uriprocess/<repository>` destination. The versioned mapping is
+`selections/repositories-v1.json`; it pins the packaging repository at
+`0e662bb67364648c41783939749ccfe3c3f7b846` and reads both upstream selections
+from that revision's Git objects. Original runtime and connector files still
+come from their exact revisions listed above. Dirty selection files in the
+packaging checkout cannot change the chosen inputs.
+
+| Proposed repository | Preserved package | URI count |
+| --- | --- | --- |
+| `uriprocess/ticket-currency` | POA ticket-currency v1 | 1 |
+| `uriprocess/ticket-readiness` | POA ticket-readiness v1 | 1 |
+| `uriprocess/ticket-lifecycle` | subactor-ticket-lifecycle 0.1.0 | 1 |
+| `uriprocess/account-twin` | subactor-account-twin 0.1.0 | 10 |
+| `uriprocess/llm-account-hub` | subactor-llm-account-hub 0.1.0 | 4 |
+| `uriprocess/managed-tunnel` | subactor-managed-tunnel 0.1.0 | 1 |
+| `uriprocess/secret-intake` | subactor-secret-intake 0.2.0 | 2 |
+| `uriprocess/credential-harvest` | subactor-credential-harvest 0.1.1 | 1 |
+
+These names are proposed Git repository destinations. Existing URI authorities,
+Python distribution names, npm scopes, versions and runtime ownership remain
+unchanged. A native connector's routes stay together in its existing package.
+This local tool contract does not assert a cross-repository ownership transfer.
+
+```bash
+export PYTHONPATH=/path/to/uripack/uripack/src
+python3 tools/prepare_repositories.py \
+  --selection selections/repositories-v1.json \
+  --package-source /path/to/uriprocess \
+  --source runtime=/path/to/runtime \
+  --source connectors=/path/to/connectors \
+  --workspace /private/recovery/new-repository-plans
+```
+
+Supply exactly the named source IDs. The new workspace must be disjoint from
+all three repositories, including the packaging checkout; its own `.subactor/`
+directory is therefore unsuitable. Existing outputs and symlink components are
+rejected. Preparation has no Git write, network call or Guard admission step.
+
+The output contains immutable-source candidates, `plans/<repository>.json`,
+`repository-selection.json`, and the final `repository-plans.json` index with
+21 URI-to-repository mappings, eight plan hashes and expected artifact digests.
+The empty `repositories/` parent is reserved for separate guarded extractions.
+Each plan includes only one original package and its generated
+`repository-targets/<repository>.json` record. That record binds the target
+repository, package path, upstream revisions, selection hash and original URI
+set into the actual URIpack plan digest. Changing the target record after
+planning fails source-drift verification before Guard admission.
+
+All original package paths remain inside URIpack's layout. For example, after
+separate guarded application the currency package root is:
+
+```text
+repositories/ticket-currency/packs/ticket-currency/tree/poa/ticket-currency/subactor.com/v1/
+```
+
+Run native package commands from the index's `package_root` under each plan's
+`target_root`. No flattening, import rewrite or universal runtime wrapper is
+introduced. The destination record is outside the original package's file set.
+
+The batch index is written only after every selection has exact mapping coverage
+and globally unique URI ownership. A failed preparation can leave diagnostic
+candidates or individual plans; treat an output without the final index as an
+incomplete batch and retry in a new workspace. The index is a local planning
+record, not signed publication authority. Operators must review and bind each
+actual plan through the protected bridge; never use an index's target string as
+authority to create, push or transfer a remote repository.
+
+Apply and verify each reviewed plan through the existing `uripack apply` and
+`uripack verify` commands described above, selecting its own plan file. There is
+no automatic batch admission: approval of one package does not admit another.
+Repository initialization, governance adoption, protected CI, remote publication
+and production routing need their own implementation and observed evidence.
+
+```bash
+make test-repository-plans \
+  URIPROCESS_SOURCE=/path/to/runtime \
+  URIPROCESS_CONNECTORS_SOURCE=/path/to/connectors
+```
+
+Local validation on 2026-09-09 used the same pinned URIpack checkout as above.
+The full Python suite passed 38 tests without skips. Eight new tests cover
+separate guarded extraction of all eight packages, original-file comparison
+against both packaging and upstream Git objects, retained URI sets and executable
+bits, destination-record drift, denied admission, mapping gaps and collisions,
+dirty selection checkouts, explicit sources, occupied outputs and symlink paths.
+The original upstream suites run inside each extraction's test Guard check.
+The standalone CLI also produced eight plans and 21 URI mappings without
+materializing any extraction target. These observations establish local planning
+and test extraction only.
+
+The generated candidates also passed offline package installation checks:
+17 original POA tests ran against installed npm packages, and all 45 native
+Python cases passed against both source copies and six installed wheels with
+matching test identities and all nineteen native bindings. This continuation
+used Python's preinstalled `urirun 0.4.115`, satisfying the original dependency
+range; the earlier 0.4.200 observation above belongs to the preceding run.
+Native verification receipt SHA-256: `84d8a18be63af7f4d42b15990ed7b067ed8d43781a437a81e9ae0b80d1ad2478`.
+Raw reports and build output remain in private recovery storage.
+
+The pinned Docs checker passed. Platform `artifacts:build` and
+`artifacts:check` also passed with 713 valid entries and no drift. Build output
+was redirected through `--out` to private recovery storage to preserve existing
+Platform work; this repository remains outside that registry's coverage.
+
+### Verify the complete repository batch
+
+Before operational extraction, use `tools/verify_repositories.py` with the
+expected mapping supplied independently of the generated batch. The verifier
+reconstructs candidates and plans from the pinned packaging selections and
+original Git objects in a disposable directory. It then compares every planned
+operation, URI, source hash and executable bit, target binding and index field.
+Only absolute workspace coordinates are rebased for this comparison. Actual
+candidate files are reobserved through the existing URIpack plan validator.
+
+```bash
+python3 tools/verify_repositories.py \
+  --selection selections/repositories-v1.json \
+  --package-source /path/to/uriprocess \
+  --source runtime=/path/to/runtime \
+  --source connectors=/path/to/connectors \
+  --workspace /private/recovery/repository-plans \
+  --out /private/recovery/repository-verification.json
+```
+
+The same explicit URIpack dependency and source paths as preparation are
+required. Select the expected mapping through the trusted operator's own input;
+the batch's `repository-selection.json` is compared with it, not selected as an
+authoritative configuration by the tool. A passing check attests to agreement
+with that supplied mapping and the pinned Git objects, not to the mapping's
+approval or remote ownership.
+
+Default verification checks all eight plans and 21 URI assignments without
+requiring or creating extraction targets. After separate Guard-admitted
+extractions, add `--extracted` to the same command and select a new `--out` path.
+That mode additionally requires every selected repository target and verifies
+its complete file set, bytes and executable modes through URIpack. Partial
+extraction, extra targets, missing or extra plan files, symlinked plans, index
+omissions, reassigned URI ownership and forged authority flags are rejected.
+A source or target-binding forgery remains invalid even after its local plan
+and index hashes have been recomputed consistently.
+
+The receipt is written only after successful verification, with mode 0600 and
+exclusive creation. Its parent must already exist and the output must be
+outside both the batch and all source repositories. Existing receipts remain
+untouched; failed checks produce no success receipt. The batch and source
+checkouts are read-only during verification; regenerated expectations are
+removed with the temporary directory.
+
+The receipt binds the expected selection, complete index, package revision,
+eight plan/artifact hashes and original source revisions. `artifacts_checked`
+reports whether the optional artifact check ran. It always retains
+`guard_receipts_authenticated=false`, `behavioral_equivalence_claimed=false`,
+`execution_authority=false`, `remote_publication=false` and
+`production_cutover=false`. Artifact byte equality does not authenticate a
+Guard receipt. Protected admission, independent behavior checks, publication
+and live acceptance readback remain separate boundaries.
+
+The full Python suite passed 47 tests without skips on 2026-09-09, and the
+existing POA package checker passed. Nine added regression tests exercise reconstruction,
+self-consistent source and destination forgeries, index corruption, incomplete
+extraction, full extraction through the synthetic test Guard, artifact tampering,
+symlinks, read-only behavior and exclusive receipt output. The unchanged local
+batch from the preceding step also passed the standalone CLI's source/plan
+verification for all eight repositories and 21 URIs. Its receipt SHA-256 is
+`05c7349259be7ae13e3c4ca972f6ed87f2e545866c2ec6b75345686f42926baf`. No operational extraction or remote publication
+was performed by this verification.
+
+### Apply a complete explicit batch
+
+`tools/apply_repositories.py` executes already selected repository plans through
+URIpack's actual `GuardBridge`. It exposes no synthetic Guard, self-approval,
+automatic Strategy selection or Git publication option. Supply the expected
+selection and sources exactly as for verification, plus one explicit
+`--guard-config REPOSITORY=PATH` argument for every selected repository.
+
+```bash
+python3 tools/apply_repositories.py \
+  --selection selections/repositories-v1.json \
+  --package-source /path/to/uriprocess \
+  --source runtime=/path/to/runtime \
+  --source connectors=/path/to/connectors \
+  --workspace /private/recovery/repository-plans \
+  --guard-config uriprocess/ticket-currency=/operator/protected/bridge.json \
+  --guard-config uriprocess/ticket-readiness=/operator/protected/bridge.json \
+  --guard-config uriprocess/ticket-lifecycle=/operator/protected/bridge.json \
+  --guard-config uriprocess/account-twin=/operator/protected/bridge.json \
+  --guard-config uriprocess/llm-account-hub=/operator/protected/bridge.json \
+  --guard-config uriprocess/managed-tunnel=/operator/protected/bridge.json \
+  --guard-config uriprocess/secret-intake=/operator/protected/bridge.json \
+  --guard-config uriprocess/credential-harvest=/operator/protected/bridge.json \
+  --output /private/recovery/new-batch-evidence
+```
+
+The bridge path is an operator-provisioned placeholder. Sharing its configuration
+still gives every plan a separate admission, lease/check sequence and completion;
+it does not turn the batch into one broad grant. The output parent must exist,
+and the output directory must be new and disjoint from the batch and all sources.
+
+Before its first effect, the command independently verifies the complete batch,
+reobserves every plan and constructs all eight real bridge clients. A missing
+mapping, invalid final configuration, changed pin or occupied target prevents
+all extraction. Bridge configuration and pinned implementation files must remain
+outside every source and the complete batch, not merely outside one package.
+The operator must protect the executable, dependencies, configuration and lease
+store; a content hash alone does not establish OS-level isolation.
+
+Successful execution writes private started/attempt/completed receipts and
+`batch-extraction.json`, then proves the complete artifact readback with the
+existing verifier. Receipt files use exclusive creation and mode 0600. It makes
+no remote Git or package-registry write and no production routing change.
+
+The first failure stops subsequent packages, writes a bounded `halted.json` and
+returns nonzero. Preflight returns a structured diagnostic such as
+`BATCH_GUARD_MAPPING_INCOMPLETE`, with `execution_started=false`. If evidence
+storage fails after an execution attempt, `BATCH_EVIDENCE_UNAVAILABLE` instead
+reports that effects may have occurred; it never labels that failure as an
+unstarted preflight. Raw exceptions and bridge output are not copied into evidence.
+An attempt marker without a completion record also survives abrupt process loss.
+If local publication happened before a failed completion, URIpack preserves its
+`MATERIALIZED_PENDING_COMPLETION` target. Existing targets are rejected on the
+next invocation: their independent recovery belongs to the protected Guard
+controller, not a blind retry or deletion by this tool. This deliberately leaves
+unknown-outcome reconciliation as a separate, unimplemented integration.
+
+The complete Python suite passed 55 tests without skips. Eight added tests
+exercise all eight extractions with separate synthetic test-role
+decisions, a real pinned stdio bridge denial, invalid final configuration before
+any effect, protection of evidence, cross-source bridge rejection and failure
+after materialization without replay. The successful fixture still runs original
+upstream tests through the existing test Guard. It does not demonstrate an
+operational bridge deployment. The canonical cross-repository investigation and
+remaining integration work belong to
+[subactor/docs: URI migration autonomy](repo://subactor/docs/architecture/analysis/uri-process-migration-autonomy.md)
+(local ticket branch; not yet published).
+
 <!-- docs:section limitations -->
 ## Limitations
 
 The two runtime selections and six native connector packages are covered.
+The `uriprocess/*` destinations are proposals: read-only GitHub API observation
+on 2026-09-09 returned HTTP 404 for both the organization and user handle
+`uriprocess`. Remote existence and access are unconfirmed; no destination
+repository was created, published or transferred by this change.
 Other `subactor/*` processes, capability DAG execution, production routing,
 source removal and package registry publication are not established by these checks. The standalone
 readiness adapter still rejects decisions requiring a trusted callback when

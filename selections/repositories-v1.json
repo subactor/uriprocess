@@ -1,0 +1,28 @@
+{
+  "schema": "uriprocess.repository-selection/v1",
+  "version": 1,
+  "package_repository": "https://github.com/subactor/uriprocess",
+  "package_revision": "0e662bb67364648c41783939749ccfe3c3f7b846",
+  "groups": [
+    {
+      "source_id": "runtime",
+      "selection": "selections/runtime-v1.json",
+      "repositories": {
+        "poa/ticket-currency/subactor.com/v1": "uriprocess/ticket-currency",
+        "poa/ticket-readiness/subactor.com/v1": "uriprocess/ticket-readiness"
+      }
+    },
+    {
+      "source_id": "connectors",
+      "selection": "selections/connectors-v3.json",
+      "repositories": {
+        "native/subactor-ticket-lifecycle/v0.1.0": "uriprocess/ticket-lifecycle",
+        "native/subactor-account-twin/v0.1.0": "uriprocess/account-twin",
+        "native/subactor-llm-account-hub/v0.1.0": "uriprocess/llm-account-hub",
+        "native/subactor-managed-tunnel/v0.1.0": "uriprocess/managed-tunnel",
+        "native/subactor-secret-intake/v0.2.0": "uriprocess/secret-intake",
+        "native/subactor-credential-harvest/v0.1.1": "uriprocess/credential-harvest"
+      }
+    }
+  ]
+}

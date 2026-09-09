@@ -1,4 +1,4 @@
-.PHONY: test test-docker test-all test-guard test-guard-export test-uripack test-native-export test-native-packages pack
+.PHONY: test test-docker test-all test-guard test-guard-export test-uripack test-native-export test-native-packages test-repository-plans pack
 test:
 	python3 -m unittest discover -s tests -v
 	python3 tools/check.py
@@ -23,3 +23,6 @@ test-native-packages:
 	python3 tools/check_native.py --source "$(URIPROCESS_CONNECTORS_SOURCE)" --output "$(NATIVE_OUTPUT)" --builder-python "$(BUILDER_PYTHON)"
 pack:
 	python3 tools/check.py --pack
+test-repository-plans:
+	test -n "$(URIPROCESS_SOURCE)" -a -n "$(URIPROCESS_CONNECTORS_SOURCE)"
+	URIPROCESS_SOURCE="$(URIPROCESS_SOURCE)" URIPROCESS_CONNECTORS_SOURCE="$(URIPROCESS_CONNECTORS_SOURCE)" python3 -m unittest discover -s tests -p 'test_repository_*.py' -v
