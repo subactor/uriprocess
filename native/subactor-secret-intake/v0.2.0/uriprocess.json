@@ -1,0 +1,19 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "browser://host/secret-intake/command/request",
+    "browser://host/secret-intake/command/consume"
+  ],
+  "native_manifest": "urirun_connector_subactor_secret_intake/connector.manifest.json",
+  "native_distribution": "urirun-connector-subactor-secret-intake",
+  "native_version": "0.2.0",
+  "entry_points": {
+    "subactor-secret-intake": "urirun_connector_subactor_secret_intake.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

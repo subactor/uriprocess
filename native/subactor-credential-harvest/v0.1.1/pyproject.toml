@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-subactor-credential-harvest"
+version = "0.1.1"
+description = "Exact, grant-gated hub:// adapter for credential harvest into the private Vault"
+requires-python = ">=3.10"
+dependencies = ["urirun>=0.4.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.entry-points."urirun.bindings"]
+subactor-credential-harvest = "urirun_connector_subactor_credential_harvest.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_subactor_credential_harvest*"]
+
+[tool.setuptools.package-data]
+urirun_connector_subactor_credential_harvest = ["connector.manifest.json"]

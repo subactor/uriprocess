@@ -1,0 +1,18 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "hub://host/credential/command/harvest"
+  ],
+  "native_manifest": "urirun_connector_subactor_credential_harvest/connector.manifest.json",
+  "native_distribution": "urirun-connector-subactor-credential-harvest",
+  "native_version": "0.1.1",
+  "entry_points": {
+    "subactor-credential-harvest": "urirun_connector_subactor_credential_harvest.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

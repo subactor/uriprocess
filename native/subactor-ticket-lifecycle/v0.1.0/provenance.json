@@ -1,0 +1,37 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/connectors",
+  "revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "files": [
+    {
+      "source": "urirun-connector-subactor-ticket-lifecycle/pyproject.toml",
+      "destination": "pyproject.toml",
+      "mode": 420,
+      "sha256": "7eb4a3fa5a52e843ffc9d6c6cd726432845b7b5efaeca275f1d6cbc314b6ebef"
+    },
+    {
+      "source": "urirun-connector-subactor-ticket-lifecycle/tests/test_ticket_lifecycle.py",
+      "destination": "tests/test_ticket_lifecycle.py",
+      "mode": 420,
+      "sha256": "9c79ab7edba01de32ca24e0b90e52a39fc787e99d28bf6b4a51061ae6eecb560"
+    },
+    {
+      "source": "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/__init__.py",
+      "destination": "urirun_connector_subactor_ticket_lifecycle/__init__.py",
+      "mode": 420,
+      "sha256": "206e9edb0515f61098ef0a5dd03bf3c90527b26ff35a3fa63b3e2772113adcdb"
+    },
+    {
+      "source": "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/connector.manifest.json",
+      "destination": "urirun_connector_subactor_ticket_lifecycle/connector.manifest.json",
+      "mode": 420,
+      "sha256": "3f130200cf7119f0c842b720ff84c291549e4d1d6f4ade4bdaa91634f02a131c"
+    },
+    {
+      "source": "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/core.py",
+      "destination": "urirun_connector_subactor_ticket_lifecycle/core.py",
+      "mode": 420,
+      "sha256": "68bd6f8adfbfbb1ba5d47e0404bbf2d4ff90726ef337fffe71b1b83bda8eb2bb"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "subactor-llm-account-hub",
+  "name": "Subactor LLM Account Hub",
+  "status": "stable",
+  "category": "AI Operations",
+  "summary": "Control-governed account/provider/tool URI boundary for Hub scoped MCP bindings.",
+  "description": "Discovers account-scoped MCP bindings and delegates status, plan and execution only through typed Subactor Control APIs. Execution requires a Control-issued container.cli.execute grant, a matching runnable intent and a currently verified safety authority; Control also completes the intent and revokes the grant. The connector never creates authority or exposes its deployment token.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["llm-account"],
+  "adapterKinds": ["control-http", "scoped-mcp-inventory"],
+  "routes": [
+    "llm-account://host/bindings/query",
+    "llm-account://host/cli/query/status",
+    "llm-account://host/cli/query/plan",
+    "llm-account://host/cli/command/execute"
+  ]
+}

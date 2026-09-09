@@ -1,0 +1,37 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/connectors",
+  "revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "files": [
+    {
+      "source": "urirun-connector-subactor-secret-intake/pyproject.toml",
+      "destination": "pyproject.toml",
+      "mode": 420,
+      "sha256": "4a2235c9a05e756ba748767fd3016d0f6b220a64ddf8bc81f8edb7ab069e2c97"
+    },
+    {
+      "source": "urirun-connector-subactor-secret-intake/tests/test_secret_intake_connector.py",
+      "destination": "tests/test_secret_intake_connector.py",
+      "mode": 420,
+      "sha256": "9507f002fbe35e56a1104cb6868d3fa9e99811619f363ee2a0d5b9f9196991d9"
+    },
+    {
+      "source": "urirun-connector-subactor-secret-intake/urirun_connector_subactor_secret_intake/__init__.py",
+      "destination": "urirun_connector_subactor_secret_intake/__init__.py",
+      "mode": 420,
+      "sha256": "bd7afc5ba07c6b5b60cc37e5355bc048a8e49ef182f57ec9e599470e2921ba6a"
+    },
+    {
+      "source": "urirun-connector-subactor-secret-intake/urirun_connector_subactor_secret_intake/connector.manifest.json",
+      "destination": "urirun_connector_subactor_secret_intake/connector.manifest.json",
+      "mode": 420,
+      "sha256": "4239eebd20e7318e3a906f30f9d91126df6e89b6ae513f792bda2b87c864f47f"
+    },
+    {
+      "source": "urirun-connector-subactor-secret-intake/urirun_connector_subactor_secret_intake/core.py",
+      "destination": "urirun_connector_subactor_secret_intake/core.py",
+      "mode": 420,
+      "sha256": "9a7a97f85d9b861d449fe5b6a52adf5dde36d79597de345e8ca480804ee04ec9"
+    }
+  ]
+}

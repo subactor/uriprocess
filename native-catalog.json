@@ -1,0 +1,114 @@
+{
+  "schema": "uriprocess.native-catalog/v1",
+  "packages": [
+    {
+      "id": "subactor-ticket-lifecycle",
+      "path": "native/subactor-ticket-lifecycle/v0.1.0",
+      "public_uris": [
+        "planfile://subactor/tickets/command/reconcile-lifecycle"
+      ],
+      "files": {
+        "provenance.json": "9fb4ed49cf36aba6f32147e0d14eb71b7900377b3f1c0630c9e3eedd25740e82",
+        "pyproject.toml": "7eb4a3fa5a52e843ffc9d6c6cd726432845b7b5efaeca275f1d6cbc314b6ebef",
+        "tests/test_ticket_lifecycle.py": "9c79ab7edba01de32ca24e0b90e52a39fc787e99d28bf6b4a51061ae6eecb560",
+        "uriprocess.json": "b36a1b97c9191dcb43b54b95c4749fa6f4107abdae9b9fd3b90d26f1d142311b",
+        "urirun_connector_subactor_ticket_lifecycle/__init__.py": "206e9edb0515f61098ef0a5dd03bf3c90527b26ff35a3fa63b3e2772113adcdb",
+        "urirun_connector_subactor_ticket_lifecycle/connector.manifest.json": "3f130200cf7119f0c842b720ff84c291549e4d1d6f4ade4bdaa91634f02a131c",
+        "urirun_connector_subactor_ticket_lifecycle/core.py": "68bd6f8adfbfbb1ba5d47e0404bbf2d4ff90726ef337fffe71b1b83bda8eb2bb"
+      }
+    },
+    {
+      "id": "subactor-account-twin",
+      "path": "native/subactor-account-twin/v0.1.0",
+      "public_uris": [
+        "twin://subactor/account/query/combinations",
+        "twin://subactor/account/query/deployments",
+        "twin://subactor/account/query/entities",
+        "twin://subactor/account/query/organizations",
+        "twin://subactor/account/query/project-reconciliations",
+        "twin://subactor/account/query/projects",
+        "twin://subactor/account/query/repositories",
+        "twin://subactor/account/query/sources",
+        "twin://subactor/account/query/summary",
+        "twin://subactor/account/query/tickets"
+      ],
+      "files": {
+        "provenance.json": "0c837401c20483098908695226f8ae7d5917c88f3f1bec44041468b865b9e18e",
+        "pyproject.toml": "ed6a8e2f3b4d7674989aa7b5d3e25da080cdeab908ba598c41afb7492185ea5f",
+        "tests/test_account_twin.py": "3d5149a02ef604132ebdb4c4e5f9f980ff351c37163a3aa98bccd22cd7336827",
+        "uriprocess.json": "3a396968c91379bfa34f05cd38ce35c185ef3bfa1bd26b071705de17a3303b36",
+        "urirun_connector_subactor_account_twin/__init__.py": "a769b91566798111991548a9ebbcd26da057831d3c6c893cbe624e8b9791b94a",
+        "urirun_connector_subactor_account_twin/connector.manifest.json": "823504d0436fc13df13d10dfa0c0a8ab087b813db4dce7ed498255a2e9fa2fc9",
+        "urirun_connector_subactor_account_twin/core.py": "c1862c6052629b382d84fe808d207247dedde02b966f4be67bb8d7baf9daa1cd"
+      }
+    },
+    {
+      "id": "subactor-llm-account-hub",
+      "path": "native/subactor-llm-account-hub/v0.1.0",
+      "public_uris": [
+        "llm-account://host/bindings/query",
+        "llm-account://host/cli/query/status",
+        "llm-account://host/cli/query/plan",
+        "llm-account://host/cli/command/execute"
+      ],
+      "files": {
+        "provenance.json": "399bfdc560bbaf4ae82c7aaea73b301cdd123f70fe8534213698d76c363a5247",
+        "pyproject.toml": "6b8aa0ce2011388d77053bdb370dfa5308f4a2729497563559438bc55dac59d6",
+        "tests/test_llm_account_hub.py": "7bc6a3a138c7a84c5b81eeacceb83a265d7c5fa105deb94c26d10eaf9cd82140",
+        "uriprocess.json": "67c148031c31ee2a4438c3895f5f0778b123a4d0a42ea5b5429aa37d95348d12",
+        "urirun_connector_subactor_llm_account_hub/__init__.py": "e3f0a21b6ced002ebf1ddfe491b1fbb0644c07b218d2b3d4fea89168eb74cecb",
+        "urirun_connector_subactor_llm_account_hub/connector.manifest.json": "eee1bed7f82c491657b2b97bf7a81ca6645cf3b367fa86f76aefd9111a25f761",
+        "urirun_connector_subactor_llm_account_hub/core.py": "63f48d15565af3fcab0ec6b3109b0a5711778e67a953cb89800e14ab879183fb"
+      }
+    },
+    {
+      "id": "subactor-managed-tunnel",
+      "path": "native/subactor-managed-tunnel/v0.1.0",
+      "public_uris": [
+        "tunnel://host/outbound/query/preflight"
+      ],
+      "files": {
+        "provenance.json": "d03fc5e943ab9808fd92690554f204fbfbbb44dc1c109d1604c88db0d6853558",
+        "pyproject.toml": "609f4c068d031c0775b408b23d2cfb0b262e3d635ae1f84489d8b87ab088fbc8",
+        "tests/test_managed_tunnel.py": "5e8a97638e33fe9a824bc3857047ee4f3013963dc14278f468f0c849133e3659",
+        "uriprocess.json": "5869a42df90af57d68679ea9ab252938bc9b0a385caea28ec861c9310db3b0fc",
+        "urirun_connector_subactor_managed_tunnel/__init__.py": "ee47ade436d1c0b5e0e9dc615cf4eb6eabbed220c98100995b9edec83db6d065",
+        "urirun_connector_subactor_managed_tunnel/connector.manifest.json": "aadb141f3dcac02b8855a41dc66463b634366929f9353d054e09f7df0d3aaf46",
+        "urirun_connector_subactor_managed_tunnel/core.py": "ae86d1774735d1e8285814a68865800a051bc68ee3f1093727143cf9a7c1b0b4"
+      }
+    },
+    {
+      "id": "subactor-secret-intake",
+      "path": "native/subactor-secret-intake/v0.2.0",
+      "public_uris": [
+        "browser://host/secret-intake/command/request",
+        "browser://host/secret-intake/command/consume"
+      ],
+      "files": {
+        "provenance.json": "711ec07e9d129519dbdaf06e37bf75f31bc75a8fa840b77b9194092c0b2f260b",
+        "pyproject.toml": "4a2235c9a05e756ba748767fd3016d0f6b220a64ddf8bc81f8edb7ab069e2c97",
+        "tests/test_secret_intake_connector.py": "9507f002fbe35e56a1104cb6868d3fa9e99811619f363ee2a0d5b9f9196991d9",
+        "uriprocess.json": "fc12e94974016fbb82d391ab152dac70a190ad9628969723036bc916dd18fae7",
+        "urirun_connector_subactor_secret_intake/__init__.py": "bd7afc5ba07c6b5b60cc37e5355bc048a8e49ef182f57ec9e599470e2921ba6a",
+        "urirun_connector_subactor_secret_intake/connector.manifest.json": "4239eebd20e7318e3a906f30f9d91126df6e89b6ae513f792bda2b87c864f47f",
+        "urirun_connector_subactor_secret_intake/core.py": "9a7a97f85d9b861d449fe5b6a52adf5dde36d79597de345e8ca480804ee04ec9"
+      }
+    },
+    {
+      "id": "subactor-credential-harvest",
+      "path": "native/subactor-credential-harvest/v0.1.1",
+      "public_uris": [
+        "hub://host/credential/command/harvest"
+      ],
+      "files": {
+        "provenance.json": "735e6aebcba48196ef7b50747e927206750724faaaa8008ce72ebb206075416c",
+        "pyproject.toml": "a669a14dbfb87cb3b0ce8b6718c4e51c282f9cf53823a79a4f26524446058b77",
+        "tests/test_credential_harvest.py": "d8cceb543dd3a8a7091ebdc60b9d26de605a5df52f14e65381ae7b5927618abc",
+        "uriprocess.json": "eeec4af0d16d124303f528e0d764c380ed6bb0191c34b9e4a14ca83c7c8b55d1",
+        "urirun_connector_subactor_credential_harvest/__init__.py": "af3dd1478af2da53c98ecb43f2fea7b698eabab3902e18e5b13173dfee4d29a2",
+        "urirun_connector_subactor_credential_harvest/connector.manifest.json": "84b2ef66bd7c6bfd4204dea8f9c4f3fd9807dd06b5c91f0ec37ad24c132c83e9",
+        "urirun_connector_subactor_credential_harvest/core.py": "259c0c867b263255361d3be4402e6e338883cf52e6adc9a5b4545324cb5dffa7"
+      }
+    }
+  ]
+}

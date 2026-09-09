@@ -1,0 +1,44 @@
+{
+  "schema": "uriprocess.native-selection/v1",
+  "source_repository": "https://github.com/subactor/connectors",
+  "source_revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "packages": [
+    {
+      "package_root": "urirun-connector-subactor-ticket-lifecycle",
+      "manifest": "urirun_connector_subactor_ticket_lifecycle/connector.manifest.json",
+      "public_uris": [
+        "planfile://subactor/tickets/command/reconcile-lifecycle"
+      ],
+      "files": [
+        "urirun-connector-subactor-ticket-lifecycle/pyproject.toml",
+        "urirun-connector-subactor-ticket-lifecycle/tests/test_ticket_lifecycle.py",
+        "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/__init__.py",
+        "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/connector.manifest.json",
+        "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/core.py"
+      ]
+    },
+    {
+      "package_root": "urirun-connector-subactor-account-twin",
+      "manifest": "urirun_connector_subactor_account_twin/connector.manifest.json",
+      "public_uris": [
+        "twin://subactor/account/query/combinations",
+        "twin://subactor/account/query/deployments",
+        "twin://subactor/account/query/entities",
+        "twin://subactor/account/query/organizations",
+        "twin://subactor/account/query/project-reconciliations",
+        "twin://subactor/account/query/projects",
+        "twin://subactor/account/query/repositories",
+        "twin://subactor/account/query/sources",
+        "twin://subactor/account/query/summary",
+        "twin://subactor/account/query/tickets"
+      ],
+      "files": [
+        "urirun-connector-subactor-account-twin/pyproject.toml",
+        "urirun-connector-subactor-account-twin/tests/test_account_twin.py",
+        "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/__init__.py",
+        "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/connector.manifest.json",
+        "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/core.py"
+      ]
+    }
+  ]
+}

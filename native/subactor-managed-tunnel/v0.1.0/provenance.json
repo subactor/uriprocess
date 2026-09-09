@@ -1,0 +1,37 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/connectors",
+  "revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "files": [
+    {
+      "source": "urirun-connector-subactor-managed-tunnel/pyproject.toml",
+      "destination": "pyproject.toml",
+      "mode": 420,
+      "sha256": "609f4c068d031c0775b408b23d2cfb0b262e3d635ae1f84489d8b87ab088fbc8"
+    },
+    {
+      "source": "urirun-connector-subactor-managed-tunnel/tests/test_managed_tunnel.py",
+      "destination": "tests/test_managed_tunnel.py",
+      "mode": 420,
+      "sha256": "5e8a97638e33fe9a824bc3857047ee4f3013963dc14278f468f0c849133e3659"
+    },
+    {
+      "source": "urirun-connector-subactor-managed-tunnel/urirun_connector_subactor_managed_tunnel/__init__.py",
+      "destination": "urirun_connector_subactor_managed_tunnel/__init__.py",
+      "mode": 420,
+      "sha256": "ee47ade436d1c0b5e0e9dc615cf4eb6eabbed220c98100995b9edec83db6d065"
+    },
+    {
+      "source": "urirun-connector-subactor-managed-tunnel/urirun_connector_subactor_managed_tunnel/connector.manifest.json",
+      "destination": "urirun_connector_subactor_managed_tunnel/connector.manifest.json",
+      "mode": 420,
+      "sha256": "aadb141f3dcac02b8855a41dc66463b634366929f9353d054e09f7df0d3aaf46"
+    },
+    {
+      "source": "urirun-connector-subactor-managed-tunnel/urirun_connector_subactor_managed_tunnel/core.py",
+      "destination": "urirun_connector_subactor_managed_tunnel/core.py",
+      "mode": 420,
+      "sha256": "ae86d1774735d1e8285814a68865800a051bc68ee3f1093727143cf9a7c1b0b4"
+    }
+  ]
+}

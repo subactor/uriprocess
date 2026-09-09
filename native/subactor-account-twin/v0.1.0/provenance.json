@@ -1,0 +1,37 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/connectors",
+  "revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "files": [
+    {
+      "source": "urirun-connector-subactor-account-twin/pyproject.toml",
+      "destination": "pyproject.toml",
+      "mode": 420,
+      "sha256": "ed6a8e2f3b4d7674989aa7b5d3e25da080cdeab908ba598c41afb7492185ea5f"
+    },
+    {
+      "source": "urirun-connector-subactor-account-twin/tests/test_account_twin.py",
+      "destination": "tests/test_account_twin.py",
+      "mode": 420,
+      "sha256": "3d5149a02ef604132ebdb4c4e5f9f980ff351c37163a3aa98bccd22cd7336827"
+    },
+    {
+      "source": "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/__init__.py",
+      "destination": "urirun_connector_subactor_account_twin/__init__.py",
+      "mode": 420,
+      "sha256": "a769b91566798111991548a9ebbcd26da057831d3c6c893cbe624e8b9791b94a"
+    },
+    {
+      "source": "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/connector.manifest.json",
+      "destination": "urirun_connector_subactor_account_twin/connector.manifest.json",
+      "mode": 420,
+      "sha256": "823504d0436fc13df13d10dfa0c0a8ab087b813db4dce7ed498255a2e9fa2fc9"
+    },
+    {
+      "source": "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/core.py",
+      "destination": "urirun_connector_subactor_account_twin/core.py",
+      "mode": 420,
+      "sha256": "c1862c6052629b382d84fe808d207247dedde02b966f4be67bb8d7baf9daa1cd"
+    }
+  ]
+}
