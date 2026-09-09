@@ -14,10 +14,30 @@ import subprocess
 import sys
 import tempfile
 import tomllib
+import xml.etree.ElementTree as ET
 
 from generate import encode, read_object
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def git_file_mode(path):
+    # Git and uripack preserve the owner executable bit, not checkout umask/ACL
+    # write permissions. A group-writable checkout still represents mode 100644.
+    return 0o755 if Path(path).stat().st_mode & 0o100 else 0o644
+
+
+def complete_test_count(report):
+    """Require observed passing cases, not just pytest's exit code or counters."""
+    try:
+        document = ET.parse(report).getroot()
+    except (ET.ParseError, OSError) as error:
+        raise ValueError("Native test report unavailable or invalid") from error
+    cases = list(document.iter("testcase"))
+    if (document.tag not in {"testsuite", "testsuites"} or not cases
+            or any(case.find(tag) is not None for case in cases for tag in ("skipped", "failure", "error"))):
+        raise ValueError("Native test evidence is incomplete: missing, skipped or failed cases")
+    return len(cases)
 
 
 def check(root, source, output, builder):
@@ -57,7 +77,7 @@ def check(root, source, output, builder):
                     raise ValueError("Native package differs from pinned source")
                 source_mode = int(subprocess.check_output(["git", "-C", str(source), "ls-tree",
                     provenance["revision"], "--", item["source"]], text=True).split()[0], 8) & 0o777
-                if path.stat().st_mode & 0o777 != source_mode or item["mode"] != source_mode:
+                if git_file_mode(path) != source_mode or item["mode"] != source_mode:
                     raise ValueError("Native file mode mismatch")
             metadata = json.loads((base / "uriprocess.json").read_text())
             project = tomllib.loads((base / "pyproject.toml").read_text())["project"]
@@ -82,8 +102,10 @@ def check(root, source, output, builder):
                 tests = sorted((copied / "tests").glob("test_*.py"))
                 if not tests:
                     raise ValueError("Native upstream tests missing")
-                run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", *map(str, tests)],
+                source_report = temporary / "source-tests.xml"
+                run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--junitxml", str(source_report), *map(str, tests)],
                     temporary, copied)
+                source_test_count = complete_test_count(source_report)
                 distribution = output / package["id"]
                 distribution.mkdir()
                 run([builder, "-m", "build", "--wheel", "--no-isolation", "--outdir", str(distribution), str(copied)], temporary)
@@ -96,7 +118,10 @@ def check(root, source, output, builder):
                 # imports must use the installed wheel, not the source checkout.
                 test_root = temporary / "tests"
                 shutil.copytree(copied / "tests", test_root)
-                run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", str(test_root)], temporary, installed)
+                installed_report = temporary / "installed-tests.xml"
+                run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--junitxml", str(installed_report), str(test_root)], temporary, installed)
+                if complete_test_count(installed_report) != source_test_count:
+                    raise ValueError("Installed native test coverage differs from source")
                 probe = '''import importlib, importlib.metadata, json, pathlib, sys
 target, name, expected = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2], set(json.loads(sys.argv[3]))
 dist = importlib.metadata.distribution(name)
@@ -115,6 +140,7 @@ assert routes == expected, 'Installed URI bindings differ from native manifest'
                     "public_uris": package["public_uris"], "wheel": str(wheels[0].relative_to(output)),
                     "wheel_sha256": hashlib.sha256(wheels[0].read_bytes()).hexdigest(),
                     "dependencies": dependencies, "source_tests": "passed", "installed_tests": "passed",
+                    "upstream_test_count": source_test_count,
                     "installed_bindings": "passed", "upstream_git_comparison": "passed"})
     receipt = {"schema": "uriprocess.native-package-verification/v1", "status": "passed", "packages": results,
                "dependency_installation": "preinstalled-runtime; offline-wheel-install-without-dependency-resolution",

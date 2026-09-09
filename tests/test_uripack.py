@@ -37,10 +37,13 @@ class TestGuard:
                     subprocess.run(["node", "--test", *map(str, sorted((manifest.parent / "tests").glob("*.test.mjs")))],
                                    cwd=manifest.parent, check=True, capture_output=True)
                 for manifest in copied.glob("packs/*/tree/native/*/*/pyproject.toml"):
+                    from check_native import complete_test_count
+                    report = Path(temporary) / (manifest.parent.parent.name + "-tests.xml")
                     env = {"PATH": os.environ.get("PATH", os.defpath), "PYTHONPATH": str(manifest.parent),
                            "PYTHONDONTWRITEBYTECODE": "1", "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"}
-                    subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"],
+                    subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--junitxml", str(report), "tests"],
                                    cwd=manifest.parent, env=env, check=True, capture_output=True)
+                    complete_test_count(report)
         return {"allowed": True, "decision_ref": "test:decision", "lease_ref": "test:lease",
                 "fencing_token": 1, "expires_at": int(time.time()) + 120,
                 "result": {"schema": "uripack.check-result/v1", "status": "passed",

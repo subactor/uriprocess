@@ -1,0 +1,37 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/connectors",
+  "revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "files": [
+    {
+      "source": "urirun-connector-subactor-credential-harvest/pyproject.toml",
+      "destination": "pyproject.toml",
+      "mode": 420,
+      "sha256": "a669a14dbfb87cb3b0ce8b6718c4e51c282f9cf53823a79a4f26524446058b77"
+    },
+    {
+      "source": "urirun-connector-subactor-credential-harvest/tests/test_credential_harvest.py",
+      "destination": "tests/test_credential_harvest.py",
+      "mode": 420,
+      "sha256": "d8cceb543dd3a8a7091ebdc60b9d26de605a5df52f14e65381ae7b5927618abc"
+    },
+    {
+      "source": "urirun-connector-subactor-credential-harvest/urirun_connector_subactor_credential_harvest/__init__.py",
+      "destination": "urirun_connector_subactor_credential_harvest/__init__.py",
+      "mode": 420,
+      "sha256": "af3dd1478af2da53c98ecb43f2fea7b698eabab3902e18e5b13173dfee4d29a2"
+    },
+    {
+      "source": "urirun-connector-subactor-credential-harvest/urirun_connector_subactor_credential_harvest/connector.manifest.json",
+      "destination": "urirun_connector_subactor_credential_harvest/connector.manifest.json",
+      "mode": 420,
+      "sha256": "84b2ef66bd7c6bfd4204dea8f9c4f3fd9807dd06b5c91f0ec37ad24c132c83e9"
+    },
+    {
+      "source": "urirun-connector-subactor-credential-harvest/urirun_connector_subactor_credential_harvest/core.py",
+      "destination": "urirun_connector_subactor_credential_harvest/core.py",
+      "mode": 420,
+      "sha256": "259c0c867b263255361d3be4402e6e338883cf52e6adc9a5b4545324cb5dffa7"
+    }
+  ]
+}

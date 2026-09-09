@@ -1,0 +1,14 @@
+{
+  "id": "subactor-credential-harvest",
+  "name": "Subactor Credential Harvest",
+  "status": "stable",
+  "category": "Business Operations",
+  "summary": "Exact, fail-closed URI Process for grant-gated credential harvest into the private Vault.",
+  "description": "Calls only the deployment-controlled LLM Account Hub harvest command and never accepts a target URL or credential value. Requires a caller-supplied live credential.harvest grant already issued by Subactor Control; the connector never issues or revokes authority. The response carries references only (vault entry id, source kind, counts), never a secret value.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["hub"],
+  "adapterKinds": ["local-function"],
+  "routes": ["hub://host/credential/command/harvest"]
+}

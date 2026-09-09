@@ -15,6 +15,39 @@ from prepare_uripack import prepare
 from test_uripack import TestGuard
 
 
+class NativeTestEvidenceTests(unittest.TestCase):
+    def test_group_writable_checkout_preserves_git_mode_but_execution_changes_it(self):
+        from check_native import git_file_mode
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "module.py"
+            path.write_text("source")
+            for mode in (0o644, 0o664, 0o600):
+                path.chmod(mode)
+                self.assertEqual(git_file_mode(path), 0o644)
+            for mode in (0o755, 0o775, 0o700):
+                path.chmod(mode)
+                self.assertEqual(git_file_mode(path), 0o755)
+
+    def test_missing_or_skipped_tests_cannot_report_complete_verification(self):
+        from check_native import complete_test_count
+        reports = ["<testsuite tests='100' failures='0'/>", "<testsuite><testcase><skipped/></testcase></testsuite>",
+                   "<testsuite><testcase><failure/></testcase></testsuite>",
+                   "<testsuite><testcase><error/></testcase></testsuite>", "<invalid"]
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "report.xml"
+            for report in reports:
+                path.write_text(report)
+                with self.subTest(report=report), self.assertRaises(ValueError):
+                    complete_test_count(path)
+
+    def test_complete_report_counts_observed_cases(self):
+        from check_native import complete_test_count
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "report.xml"
+            path.write_text("<testsuites><testsuite><testcase name='a'/><testcase name='b'/></testsuite></testsuites>")
+            self.assertEqual(complete_test_count(path), 2)
+
+
 @unittest.skipUnless(os.environ.get("URIPROCESS_CONNECTORS_SOURCE"), "Set URIPROCESS_CONNECTORS_SOURCE for native-package integration")
 class NativePackageTests(unittest.TestCase):
     def setUp(self):
@@ -85,12 +118,11 @@ class NativePackageTests(unittest.TestCase):
             check(candidate, self.source, self.root / "verification", sys.executable)
         self.assertFalse((self.root / "verification/verification.json").exists())
 
-    def test_extended_selection_extracts_hub_and_reproduces_current_catalog(self):
+    def test_historical_v2_selection_preserves_hub_and_existing_packages(self):
         from uripack_refactor.executor import apply_plan, verify_artifact
         config = json.loads((ROOT / "selections/connectors-v2.json").read_text())
         plan = prepare(config, self.source, self.root / "extended")
         candidate = self.root / "extended/candidate"
-        self.assertEqual((candidate / "native-catalog.json").read_bytes(), (ROOT / "native-catalog.json").read_bytes())
         packages = json.loads((candidate / "native-catalog.json").read_text())["packages"]
         self.assertEqual(len(packages), 3)
         self.assertEqual(sum(len(p["public_uris"]) for p in packages), 15)
@@ -99,6 +131,23 @@ class NativePackageTests(unittest.TestCase):
         self.assertEqual(verify_artifact(plan)["status"], "passed")
         for package in packages:
             extracted = self.root / "extended/extracted/packs" / "-".join(Path(package["path"]).parts) / "tree" / package["path"]
+            for name in package["files"]:
+                self.assertEqual((extracted / name).read_bytes(), (ROOT / package["path"] / name).read_bytes())
+
+    def test_current_selection_extracts_control_connectors_and_reproduces_catalog(self):
+        from uripack_refactor.executor import apply_plan, verify_artifact
+        config = json.loads((ROOT / "selections/connectors-v3.json").read_text())
+        plan = prepare(config, self.source, self.root / "current")
+        candidate = self.root / "current/candidate"
+        self.assertEqual((candidate / "native-catalog.json").read_bytes(), (ROOT / "native-catalog.json").read_bytes())
+        packages = json.loads((candidate / "native-catalog.json").read_text())["packages"]
+        self.assertEqual(len(packages), 6)
+        self.assertEqual(sum(len(p["public_uris"]) for p in packages), 19)
+        result = apply_plan(plan, TestGuard())
+        self.assertEqual(result["status"], "EXTRACTED")
+        self.assertEqual(verify_artifact(plan)["status"], "passed")
+        for package in packages:
+            extracted = self.root / "current/extracted/packs" / "-".join(Path(package["path"]).parts) / "tree" / package["path"]
             for name in package["files"]:
                 self.assertEqual((extracted / name).read_bytes(), (ROOT / package["path"] / name).read_bytes())
 

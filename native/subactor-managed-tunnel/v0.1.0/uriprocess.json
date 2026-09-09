@@ -1,0 +1,18 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "tunnel://host/outbound/query/preflight"
+  ],
+  "native_manifest": "urirun_connector_subactor_managed_tunnel/connector.manifest.json",
+  "native_distribution": "urirun-connector-subactor-managed-tunnel",
+  "native_version": "0.1.0",
+  "entry_points": {
+    "subactor-managed-tunnel": "urirun_connector_subactor_managed_tunnel.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

@@ -1,0 +1,14 @@
+{
+  "id": "subactor-managed-tunnel",
+  "name": "Subactor Managed Outbound Tunnel",
+  "status": "experimental",
+  "category": "Infrastructure",
+  "summary": "Exact read-only preflight for the Founder SaaS outbound tunnel.",
+  "description": "Checks a deployment-controlled Control health endpoint, its authentication challenge, and the presence of provider configuration without creating a tunnel or exposing credential material.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["tunnel"],
+  "adapterKinds": ["local-function"],
+  "routes": ["tunnel://host/outbound/query/preflight"]
+}

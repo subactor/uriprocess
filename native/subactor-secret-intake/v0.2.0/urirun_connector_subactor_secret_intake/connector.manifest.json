@@ -1,0 +1,17 @@
+{
+  "id": "subactor-secret-intake",
+  "name": "Subactor Secret Intake",
+  "status": "stable",
+  "category": "Security & Vault",
+  "summary": "Exact URI adapters that reuse scoped deployment credentials or mint and observe one-time Vault intake via Control.",
+  "description": "Calls only deployment-controlled Subactor Control endpoints. Deployment requests carry validated domain, webspace and destination Vault identifiers so Control may reuse one unambiguous Vault or domain-bound environment source. The connector never accepts password or API key values; consume is a readiness poll.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["browser"],
+  "adapterKinds": ["local-function"],
+  "routes": [
+    "browser://host/secret-intake/command/request",
+    "browser://host/secret-intake/command/consume"
+  ]
+}

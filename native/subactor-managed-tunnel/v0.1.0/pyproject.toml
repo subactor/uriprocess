@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-subactor-managed-tunnel"
+version = "0.1.0"
+description = "Read-only preflight for the managed Subactor outbound tunnel"
+requires-python = ">=3.10"
+dependencies = ["urirun>=0.4.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.entry-points."urirun.bindings"]
+subactor-managed-tunnel = "urirun_connector_subactor_managed_tunnel.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_subactor_managed_tunnel*"]
+
+[tool.setuptools.package-data]
+urirun_connector_subactor_managed_tunnel = ["connector.manifest.json"]
