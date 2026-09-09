@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 8,
+  "version": 9,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "48799f5e68dfc2f3c05d094bb194fa67f88986b4",
+  "source_revision": "f1bb2b3020585bb0ef32a44997d07ef733e20d75",
   "affected_repositories": [
     "subactor/uriprocess"
   ],
@@ -36,7 +36,9 @@
     "repo://subactor/uriprocess/tests/test_repository_plans.py",
     "repo://subactor/uriprocess/selections/repositories-v1.json",
     "repo://subactor/uriprocess/tools/verify_repositories.py",
-    "repo://subactor/uriprocess/tests/test_repository_verification.py"
+    "repo://subactor/uriprocess/tests/test_repository_verification.py",
+    "repo://subactor/uriprocess/tools/apply_repositories.py",
+    "repo://subactor/uriprocess/tests/test_repository_application.py"
   ]
 }
 ---
@@ -81,9 +83,10 @@ uses uripack's extraction-plan contract, not a Strategy execution receipt.
 ## Evidence
 
 Local validation on 2026-09-09 used Python 3, Node 22.23.1, Docker 29.1.3 and
-the uripack source revision linked in metadata. The uriprocess source revision
-identifies the previously published implementation base. The listed source and
-test entry points define the extension; PR #7 carries the source for review.
+the uripack source revision linked in metadata. The metadata source revision
+identifies the implementation base of this local increment. PR #7 contains the
+earlier package integration; subsequent repository planning, verification and
+batch application remain local changes until separately published.
 
 | Check | Observed scope and result |
 | --- | --- |
@@ -495,6 +498,74 @@ batch from the preceding step also passed the standalone CLI's source/plan
 verification for all eight repositories and 21 URIs. Its receipt SHA-256 is
 `05c7349259be7ae13e3c4ca972f6ed87f2e545866c2ec6b75345686f42926baf`. No operational extraction or remote publication
 was performed by this verification.
+
+### Apply a complete explicit batch
+
+`tools/apply_repositories.py` executes already selected repository plans through
+URIpack's actual `GuardBridge`. It exposes no synthetic Guard, self-approval,
+automatic Strategy selection or Git publication option. Supply the expected
+selection and sources exactly as for verification, plus one explicit
+`--guard-config REPOSITORY=PATH` argument for every selected repository.
+
+```bash
+python3 tools/apply_repositories.py \
+  --selection selections/repositories-v1.json \
+  --package-source /path/to/uriprocess \
+  --source runtime=/path/to/runtime \
+  --source connectors=/path/to/connectors \
+  --workspace /private/recovery/repository-plans \
+  --guard-config uriprocess/ticket-currency=/operator/protected/bridge.json \
+  --guard-config uriprocess/ticket-readiness=/operator/protected/bridge.json \
+  --guard-config uriprocess/ticket-lifecycle=/operator/protected/bridge.json \
+  --guard-config uriprocess/account-twin=/operator/protected/bridge.json \
+  --guard-config uriprocess/llm-account-hub=/operator/protected/bridge.json \
+  --guard-config uriprocess/managed-tunnel=/operator/protected/bridge.json \
+  --guard-config uriprocess/secret-intake=/operator/protected/bridge.json \
+  --guard-config uriprocess/credential-harvest=/operator/protected/bridge.json \
+  --output /private/recovery/new-batch-evidence
+```
+
+The bridge path is an operator-provisioned placeholder. Sharing its configuration
+still gives every plan a separate admission, lease/check sequence and completion;
+it does not turn the batch into one broad grant. The output parent must exist,
+and the output directory must be new and disjoint from the batch and all sources.
+
+Before its first effect, the command independently verifies the complete batch,
+reobserves every plan and constructs all eight real bridge clients. A missing
+mapping, invalid final configuration, changed pin or occupied target prevents
+all extraction. Bridge configuration and pinned implementation files must remain
+outside every source and the complete batch, not merely outside one package.
+The operator must protect the executable, dependencies, configuration and lease
+store; a content hash alone does not establish OS-level isolation.
+
+Successful execution writes private started/attempt/completed receipts and
+`batch-extraction.json`, then proves the complete artifact readback with the
+existing verifier. Receipt files use exclusive creation and mode 0600. It makes
+no remote Git or package-registry write and no production routing change.
+
+The first failure stops subsequent packages, writes a bounded `halted.json` and
+returns nonzero. Preflight returns a structured diagnostic such as
+`BATCH_GUARD_MAPPING_INCOMPLETE`, with `execution_started=false`. If evidence
+storage fails after an execution attempt, `BATCH_EVIDENCE_UNAVAILABLE` instead
+reports that effects may have occurred; it never labels that failure as an
+unstarted preflight. Raw exceptions and bridge output are not copied into evidence.
+An attempt marker without a completion record also survives abrupt process loss.
+If local publication happened before a failed completion, URIpack preserves its
+`MATERIALIZED_PENDING_COMPLETION` target. Existing targets are rejected on the
+next invocation: their independent recovery belongs to the protected Guard
+controller, not a blind retry or deletion by this tool. This deliberately leaves
+unknown-outcome reconciliation as a separate, unimplemented integration.
+
+The complete Python suite passed 55 tests without skips. Eight added tests
+exercise all eight extractions with separate synthetic test-role
+decisions, a real pinned stdio bridge denial, invalid final configuration before
+any effect, protection of evidence, cross-source bridge rejection and failure
+after materialization without replay. The successful fixture still runs original
+upstream tests through the existing test Guard. It does not demonstrate an
+operational bridge deployment. The canonical cross-repository investigation and
+remaining integration work belong to
+[subactor/docs: URI migration autonomy](repo://subactor/docs/architecture/analysis/uri-process-migration-autonomy.md)
+(local ticket branch; not yet published).
 
 <!-- docs:section limitations -->
 ## Limitations
