@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 7,
+  "version": 8,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "0e662bb67364648c41783939749ccfe3c3f7b846",
+  "source_revision": "48799f5e68dfc2f3c05d094bb194fa67f88986b4",
   "affected_repositories": [
     "subactor/uriprocess"
   ],
@@ -34,7 +34,9 @@
     "https://github.com/subactor/uripack/tree/23925ec4b3a5283f51e74b36c4bd33a9cd2820b7",
     "repo://subactor/uriprocess/tools/prepare_repositories.py",
     "repo://subactor/uriprocess/tests/test_repository_plans.py",
-    "repo://subactor/uriprocess/selections/repositories-v1.json"
+    "repo://subactor/uriprocess/selections/repositories-v1.json",
+    "repo://subactor/uriprocess/tools/verify_repositories.py",
+    "repo://subactor/uriprocess/tests/test_repository_verification.py"
   ]
 }
 ---
@@ -430,6 +432,69 @@ The pinned Docs checker passed. Platform `artifacts:build` and
 `artifacts:check` also passed with 713 valid entries and no drift. Build output
 was redirected through `--out` to private recovery storage to preserve existing
 Platform work; this repository remains outside that registry's coverage.
+
+### Verify the complete repository batch
+
+Before operational extraction, use `tools/verify_repositories.py` with the
+expected mapping supplied independently of the generated batch. The verifier
+reconstructs candidates and plans from the pinned packaging selections and
+original Git objects in a disposable directory. It then compares every planned
+operation, URI, source hash and executable bit, target binding and index field.
+Only absolute workspace coordinates are rebased for this comparison. Actual
+candidate files are reobserved through the existing URIpack plan validator.
+
+```bash
+python3 tools/verify_repositories.py \
+  --selection selections/repositories-v1.json \
+  --package-source /path/to/uriprocess \
+  --source runtime=/path/to/runtime \
+  --source connectors=/path/to/connectors \
+  --workspace /private/recovery/repository-plans \
+  --out /private/recovery/repository-verification.json
+```
+
+The same explicit URIpack dependency and source paths as preparation are
+required. Select the expected mapping through the trusted operator's own input;
+the batch's `repository-selection.json` is compared with it, not selected as an
+authoritative configuration by the tool. A passing check attests to agreement
+with that supplied mapping and the pinned Git objects, not to the mapping's
+approval or remote ownership.
+
+Default verification checks all eight plans and 21 URI assignments without
+requiring or creating extraction targets. After separate Guard-admitted
+extractions, add `--extracted` to the same command and select a new `--out` path.
+That mode additionally requires every selected repository target and verifies
+its complete file set, bytes and executable modes through URIpack. Partial
+extraction, extra targets, missing or extra plan files, symlinked plans, index
+omissions, reassigned URI ownership and forged authority flags are rejected.
+A source or target-binding forgery remains invalid even after its local plan
+and index hashes have been recomputed consistently.
+
+The receipt is written only after successful verification, with mode 0600 and
+exclusive creation. Its parent must already exist and the output must be
+outside both the batch and all source repositories. Existing receipts remain
+untouched; failed checks produce no success receipt. The batch and source
+checkouts are read-only during verification; regenerated expectations are
+removed with the temporary directory.
+
+The receipt binds the expected selection, complete index, package revision,
+eight plan/artifact hashes and original source revisions. `artifacts_checked`
+reports whether the optional artifact check ran. It always retains
+`guard_receipts_authenticated=false`, `behavioral_equivalence_claimed=false`,
+`execution_authority=false`, `remote_publication=false` and
+`production_cutover=false`. Artifact byte equality does not authenticate a
+Guard receipt. Protected admission, independent behavior checks, publication
+and live acceptance readback remain separate boundaries.
+
+The full Python suite passed 47 tests without skips on 2026-09-09, and the
+existing POA package checker passed. Nine added regression tests exercise reconstruction,
+self-consistent source and destination forgeries, index corruption, incomplete
+extraction, full extraction through the synthetic test Guard, artifact tampering,
+symlinks, read-only behavior and exclusive receipt output. The unchanged local
+batch from the preceding step also passed the standalone CLI's source/plan
+verification for all eight repositories and 21 URIs. Its receipt SHA-256 is
+`05c7349259be7ae13e3c4ca972f6ed87f2e545866c2ec6b75345686f42926baf`. No operational extraction or remote publication
+was performed by this verification.
 
 <!-- docs:section limitations -->
 ## Limitations

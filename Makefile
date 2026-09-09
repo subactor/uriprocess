@@ -25,4 +25,4 @@ pack:
 	python3 tools/check.py --pack
 test-repository-plans:
 	test -n "$(URIPROCESS_SOURCE)" -a -n "$(URIPROCESS_CONNECTORS_SOURCE)"
-	URIPROCESS_SOURCE="$(URIPROCESS_SOURCE)" URIPROCESS_CONNECTORS_SOURCE="$(URIPROCESS_CONNECTORS_SOURCE)" python3 -m unittest discover -s tests -p test_repository_plans.py -v
+	URIPROCESS_SOURCE="$(URIPROCESS_SOURCE)" URIPROCESS_CONNECTORS_SOURCE="$(URIPROCESS_CONNECTORS_SOURCE)" python3 -m unittest discover -s tests -p 'test_repository_*.py' -v
