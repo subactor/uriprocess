@@ -109,6 +109,42 @@
         "urirun_connector_subactor_credential_harvest/connector.manifest.json": "84b2ef66bd7c6bfd4204dea8f9c4f3fd9807dd06b5c91f0ec37ad24c132c83e9",
         "urirun_connector_subactor_credential_harvest/core.py": "259c0c867b263255361d3be4402e6e338883cf52e6adc9a5b4545324cb5dffa7"
       }
+    },
+    {
+      "id": "platform-uri-blueprints",
+      "path": "native/platform-uri-blueprints/v0.1.0",
+      "public_uris": [
+        "repo://workspace/uri-blueprints/communications/command/implement",
+        "repo://workspace/uri-blueprints/project-orchestration/command/implement",
+        "repo://workspace/uri-blueprints/secret-intake/command/implement"
+      ],
+      "files": {
+        "provenance.json": "535b3511bf2a29a950c5b8c86ae883828bf45760628eae8e85a6a838c53d5b40",
+        "pyproject.toml": "7674037efbd3f00783f6169428ccad03bf65c1b1e08e5c14bec0ba9e07aa2bb9",
+        "tests/__init__.py": "6bc75682fe1877033f2ba42742217fb94c884a4ee6e26a606bc1fd087c8583de",
+        "tests/test_platform_uri_blueprints.py": "66917ae107a0a67df1b732a28254f81e9369cde27d4c8e39ed656d5fdce12096",
+        "uriprocess.json": "0f4e2a855ecd5d454347df9676a3eafa0bcc5000e18511ef5ae69225e4585fe1",
+        "urirun_connector_platform_uri_blueprints/__init__.py": "c2660d1bc2aa8c980344c2dfad145210279acb35dfdcfb1d73d3e326149fcfcb",
+        "urirun_connector_platform_uri_blueprints/connector.manifest.json": "f65e2989388b6b220e5bfab336ee89a9c8e8d56c0b5f9350de1868a02b1d0c66",
+        "urirun_connector_platform_uri_blueprints/core.py": "95330faf115a47fb7d704a6ec409b5a45afd43cc0d4ad5e63ef41af0e8c85b32"
+      }
+    },
+    {
+      "id": "approved-recipient-email",
+      "path": "native/approved-recipient-email/v0.1.0",
+      "public_uris": [
+        "email://approved-recipients/message/command/send"
+      ],
+      "files": {
+        "provenance.json": "df84d4f08eac5207f3353b6bdbbd361536c69b17add274df315b188e112387e7",
+        "pyproject.toml": "ba173ddc32746813aadc2e95d50d3c0ef89003627a951f7e47cb6a54cfa67287",
+        "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests/test_approved_recipient_email.py": "9b30f07cd94551212b7208f10a32da2aef4821a7cef00eb96133127ac50f2ee4",
+        "uriprocess.json": "bdb5c2b73b4c7fdce081d9aa13039066474383c1e2b76cf2446e3ed5cbad8395",
+        "urirun_connector_approved_recipient_email/__init__.py": "c7ed884e7fc935a2579a781091465e4935d82359a202bf4369809ca01f9c70cc",
+        "urirun_connector_approved_recipient_email/connector.manifest.json": "ea5540d15e62a8575aef27fa606522bd9cad934c2b408cca04d510a50dea8cca",
+        "urirun_connector_approved_recipient_email/core.py": "7c939122142be3dcbc4dc582ea219e398ad3a64ac19770d325643aec7827cfbc"
+      }
     }
   ]
 }

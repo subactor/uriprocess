@@ -1,0 +1,18 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "email://approved-recipients/message/command/send"
+  ],
+  "native_manifest": "urirun_connector_approved_recipient_email/connector.manifest.json",
+  "native_distribution": "urirun-connector-approved-recipient-email",
+  "native_version": "0.1.0",
+  "entry_points": {
+    "approved-recipient-email": "urirun_connector_approved_recipient_email.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

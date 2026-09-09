@@ -1,0 +1,20 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "repo://workspace/uri-blueprints/communications/command/implement",
+    "repo://workspace/uri-blueprints/project-orchestration/command/implement",
+    "repo://workspace/uri-blueprints/secret-intake/command/implement"
+  ],
+  "native_manifest": "urirun_connector_platform_uri_blueprints/connector.manifest.json",
+  "native_distribution": "urirun-connector-platform-uri-blueprints",
+  "native_version": "0.1.0",
+  "entry_points": {
+    "platform-uri-blueprints": "urirun_connector_platform_uri_blueprints.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

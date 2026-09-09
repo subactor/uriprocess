@@ -1,0 +1,18 @@
+{
+  "id": "platform-uri-blueprints",
+  "name": "Platform URI Blueprints",
+  "status": "stable",
+  "category": "Developer Operations",
+  "summary": "Exact structural-compiler adapters for the governed Subactor URI blueprints.",
+  "description": "Runs the existing authenticated Control structural-compiler preflight for three fixed blueprints. It accepts no actor-selected target or credential and grants no production apply authority.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["repo"],
+  "adapterKinds": ["local-function"],
+  "routes": [
+    "repo://workspace/uri-blueprints/communications/command/implement",
+    "repo://workspace/uri-blueprints/project-orchestration/command/implement",
+    "repo://workspace/uri-blueprints/secret-intake/command/implement"
+  ]
+}
