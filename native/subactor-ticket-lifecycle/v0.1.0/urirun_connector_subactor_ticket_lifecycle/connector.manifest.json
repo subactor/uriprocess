@@ -1,0 +1,15 @@
+{
+  "id": "subactor-ticket-lifecycle",
+  "name": "Subactor Ticket Lifecycle",
+  "status": "stable",
+  "category": "Business Operations",
+  "summary": "Exact, fail-closed URI Process for ticket lifecycle reconciliation.",
+  "description": "Calls only the deployment-controlled Subactor Control lifecycle endpoint and never accepts a target URL or credential from the actor payload.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["planfile"],
+  "adapterKinds": ["local-function"],
+  "routes": ["planfile://subactor/tickets/command/reconcile-lifecycle"]
+}
+

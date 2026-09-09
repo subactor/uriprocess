@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-subactor-ticket-lifecycle"
+version = "0.1.0"
+description = "Exact, bounded Subactor ticket-lifecycle URI Process"
+requires-python = ">=3.10"
+dependencies = ["urirun>=0.4.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.entry-points."urirun.bindings"]
+subactor-ticket-lifecycle = "urirun_connector_subactor_ticket_lifecycle.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_subactor_ticket_lifecycle*"]
+
+[tool.setuptools.package-data]
+urirun_connector_subactor_ticket_lifecycle = ["connector.manifest.json"]
+

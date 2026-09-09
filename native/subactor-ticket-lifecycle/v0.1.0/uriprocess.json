@@ -1,0 +1,18 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "planfile://subactor/tickets/command/reconcile-lifecycle"
+  ],
+  "native_manifest": "urirun_connector_subactor_ticket_lifecycle/connector.manifest.json",
+  "native_distribution": "urirun-connector-subactor-ticket-lifecycle",
+  "native_version": "0.1.0",
+  "entry_points": {
+    "subactor-ticket-lifecycle": "urirun_connector_subactor_ticket_lifecycle.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}
