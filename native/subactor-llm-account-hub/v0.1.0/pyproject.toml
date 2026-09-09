@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-subactor-llm-account-hub"
+version = "0.1.0"
+description = "Exact llm-account:// adapter for account-scoped Hub CLI/MCP bindings"
+requires-python = ">=3.10"
+dependencies = ["urirun>=0.4.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.entry-points."urirun.bindings"]
+subactor-llm-account-hub = "urirun_connector_subactor_llm_account_hub.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_subactor_llm_account_hub*"]
+
+[tool.setuptools.package-data]
+urirun_connector_subactor_llm_account_hub = ["connector.manifest.json"]

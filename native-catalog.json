@@ -41,6 +41,25 @@
         "urirun_connector_subactor_account_twin/connector.manifest.json": "823504d0436fc13df13d10dfa0c0a8ab087b813db4dce7ed498255a2e9fa2fc9",
         "urirun_connector_subactor_account_twin/core.py": "c1862c6052629b382d84fe808d207247dedde02b966f4be67bb8d7baf9daa1cd"
       }
+    },
+    {
+      "id": "subactor-llm-account-hub",
+      "path": "native/subactor-llm-account-hub/v0.1.0",
+      "public_uris": [
+        "llm-account://host/bindings/query",
+        "llm-account://host/cli/query/status",
+        "llm-account://host/cli/query/plan",
+        "llm-account://host/cli/command/execute"
+      ],
+      "files": {
+        "provenance.json": "399bfdc560bbaf4ae82c7aaea73b301cdd123f70fe8534213698d76c363a5247",
+        "pyproject.toml": "6b8aa0ce2011388d77053bdb370dfa5308f4a2729497563559438bc55dac59d6",
+        "tests/test_llm_account_hub.py": "7bc6a3a138c7a84c5b81eeacceb83a265d7c5fa105deb94c26d10eaf9cd82140",
+        "uriprocess.json": "67c148031c31ee2a4438c3895f5f0778b123a4d0a42ea5b5429aa37d95348d12",
+        "urirun_connector_subactor_llm_account_hub/__init__.py": "e3f0a21b6ced002ebf1ddfe491b1fbb0644c07b218d2b3d4fea89168eb74cecb",
+        "urirun_connector_subactor_llm_account_hub/connector.manifest.json": "eee1bed7f82c491657b2b97bf7a81ca6645cf3b367fa86f76aefd9111a25f761",
+        "urirun_connector_subactor_llm_account_hub/core.py": "63f48d15565af3fcab0ec6b3109b0a5711778e67a953cb89800e14ab879183fb"
+      }
     }
   ]
 }

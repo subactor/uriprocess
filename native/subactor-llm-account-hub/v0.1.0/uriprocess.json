@@ -1,0 +1,21 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "llm-account://host/bindings/query",
+    "llm-account://host/cli/query/status",
+    "llm-account://host/cli/query/plan",
+    "llm-account://host/cli/command/execute"
+  ],
+  "native_manifest": "urirun_connector_subactor_llm_account_hub/connector.manifest.json",
+  "native_distribution": "urirun-connector-subactor-llm-account-hub",
+  "native_version": "0.1.0",
+  "entry_points": {
+    "subactor-llm-account-hub": "urirun_connector_subactor_llm_account_hub.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

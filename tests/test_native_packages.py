@@ -85,6 +85,23 @@ class NativePackageTests(unittest.TestCase):
             check(candidate, self.source, self.root / "verification", sys.executable)
         self.assertFalse((self.root / "verification/verification.json").exists())
 
+    def test_extended_selection_extracts_hub_and_reproduces_current_catalog(self):
+        from uripack_refactor.executor import apply_plan, verify_artifact
+        config = json.loads((ROOT / "selections/connectors-v2.json").read_text())
+        plan = prepare(config, self.source, self.root / "extended")
+        candidate = self.root / "extended/candidate"
+        self.assertEqual((candidate / "native-catalog.json").read_bytes(), (ROOT / "native-catalog.json").read_bytes())
+        packages = json.loads((candidate / "native-catalog.json").read_text())["packages"]
+        self.assertEqual(len(packages), 3)
+        self.assertEqual(sum(len(p["public_uris"]) for p in packages), 15)
+        result = apply_plan(plan, TestGuard())
+        self.assertEqual(result["status"], "EXTRACTED")
+        self.assertEqual(verify_artifact(plan)["status"], "passed")
+        for package in packages:
+            extracted = self.root / "extended/extracted/packs" / "-".join(Path(package["path"]).parts) / "tree" / package["path"]
+            for name in package["files"]:
+                self.assertEqual((extracted / name).read_bytes(), (ROOT / package["path"] / name).read_bytes())
+
 
 if __name__ == "__main__":
     unittest.main()

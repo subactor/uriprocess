@@ -1,0 +1,37 @@
+{
+  "schema": "uriprocess.provenance/v1",
+  "repository": "https://github.com/subactor/connectors",
+  "revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "files": [
+    {
+      "source": "urirun-connector-subactor-llm-account-hub/pyproject.toml",
+      "destination": "pyproject.toml",
+      "mode": 420,
+      "sha256": "6b8aa0ce2011388d77053bdb370dfa5308f4a2729497563559438bc55dac59d6"
+    },
+    {
+      "source": "urirun-connector-subactor-llm-account-hub/tests/test_llm_account_hub.py",
+      "destination": "tests/test_llm_account_hub.py",
+      "mode": 420,
+      "sha256": "7bc6a3a138c7a84c5b81eeacceb83a265d7c5fa105deb94c26d10eaf9cd82140"
+    },
+    {
+      "source": "urirun-connector-subactor-llm-account-hub/urirun_connector_subactor_llm_account_hub/__init__.py",
+      "destination": "urirun_connector_subactor_llm_account_hub/__init__.py",
+      "mode": 420,
+      "sha256": "e3f0a21b6ced002ebf1ddfe491b1fbb0644c07b218d2b3d4fea89168eb74cecb"
+    },
+    {
+      "source": "urirun-connector-subactor-llm-account-hub/urirun_connector_subactor_llm_account_hub/connector.manifest.json",
+      "destination": "urirun_connector_subactor_llm_account_hub/connector.manifest.json",
+      "mode": 420,
+      "sha256": "eee1bed7f82c491657b2b97bf7a81ca6645cf3b367fa86f76aefd9111a25f761"
+    },
+    {
+      "source": "urirun-connector-subactor-llm-account-hub/urirun_connector_subactor_llm_account_hub/core.py",
+      "destination": "urirun_connector_subactor_llm_account_hub/core.py",
+      "mode": 420,
+      "sha256": "63f48d15565af3fcab0ec6b3109b0a5711778e67a953cb89800e14ab879183fb"
+    }
+  ]
+}
