@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wellmanifest.dev/uriprocess/package.schema.v1.json",
+  "$defs": {
+    "poa-node-v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "process_ref",
+        "contract",
+        "language",
+        "entry",
+        "export",
+        "transport",
+        "request_fields",
+        "base_image",
+        "role",
+        "executes_declared_capabilities",
+        "authority",
+        "source"
+      ],
+      "properties": {
+        "schema": {
+          "const": "uriprocess.package/v1"
+        },
+        "process_ref": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 2048,
+          "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$"
+        },
+        "contract": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "language": {
+          "const": "javascript"
+        },
+        "entry": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "export": {
+          "type": "string",
+          "minLength": 1
+        },
+        "transport": {
+          "const": "stdin-json"
+        },
+        "request_fields": {
+          "const": [
+            "ticket",
+            "context"
+          ]
+        },
+        "base_image": {
+          "type": "string",
+          "pattern": "^[^\\s@]+@sha256:[0-9a-f]{64}$"
+        },
+        "role": {
+          "const": "decision-library"
+        },
+        "executes_declared_capabilities": {
+          "const": false
+        },
+        "authority": {
+          "const": "decision-only; no execution grant"
+        },
+        "source": {
+          "const": "provenance.json"
+        }
+      }
+    },
+    "python-native-v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "kind",
+        "public_uris",
+        "native_manifest",
+        "native_distribution",
+        "native_version",
+        "entry_points",
+        "dependencies",
+        "source",
+        "production_binding_verified"
+      ],
+      "properties": {
+        "schema": {
+          "const": "uriprocess.native-package/v1"
+        },
+        "kind": {
+          "const": "python-connector"
+        },
+        "public_uris": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 2048,
+            "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "native_manifest": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "native_distribution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "native_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "entry_points": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source": {
+          "const": "provenance.json"
+        },
+        "production_binding_verified": {
+          "const": false
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "repository",
+        "revision",
+        "files"
+      ],
+      "properties": {
+        "schema": {
+          "const": "uriprocess.provenance/v1"
+        },
+        "repository": {
+          "type": "string",
+          "pattern": "^https://[^\\s]+$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "destination",
+              "sha256"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              },
+              "destination": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "mode": {
+                "enum": [
+                  420,
+                  493
+                ]
+              }
+            }
+          },
+          "minItems": 1,
+          "maxItems": 4096
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/poa-node-v1"
+    },
+    {
+      "$ref": "#/$defs/python-native-v1"
+    },
+    {
+      "$ref": "#/$defs/provenance"
+    }
+  ]
+}
