@@ -38,6 +38,15 @@ retains fail-closed behavior.
 
 [Packaging, generation, verification and limitations](docs/information/process-packaging.md).
 
+[Native Guard observation and its limits](docs/information/guard-observation.md)
+uses the existing Guard API for exact-revision Git observations. It grants no
+execution or publication authority.
+
+[Native Guard export](docs/information/native-guard-export.md) adds planning,
+separately admitted execution and verified package retrieval. The full local
+HTTP/CLI/Docker/npm test is `make test-guard-export`; production provisioning
+and independent publication are separate prerequisites.
+
 [Create extraction plans with uripack and verify migration](docs/information/uripack-integration.md).
 The integration tests exercise real extraction with an explicitly synthetic Guard;
 operational `uripack apply` requires an independently protected bridge.

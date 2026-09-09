@@ -1,0 +1,27 @@
+[Unit]
+Description=Native Organism Guard for URI process exports
+After=network.target
+
+[Service]
+Type=simple
+User=uriprocess-guard
+Group=uriprocess-guard
+StateDirectory=uriprocess-guard
+UMask=0077
+Environment=PYTHONDONTWRITEBYTECODE=1
+EnvironmentFile=/etc/uriprocess-guard/credentials.env
+ExecStart=/opt/uriprocess-guard/venv/bin/organism-guard api serve --config /etc/uriprocess-guard/server.json --host 127.0.0.1 --port 8765
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ReadOnlyPaths=/srv/uriprocess-guard/repositories
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
