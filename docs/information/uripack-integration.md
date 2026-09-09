@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 5,
+  "version": 6,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "71adc05fc8f913d8c308b503be048852ecf21a60",
+  "source_revision": "625c28668458b42d38153ae8c981857d0122771d",
   "affected_repositories": ["subactor/uriprocess"],
   "evidence": [
     "repo://subactor/uriprocess/tools/prepare_uripack.py",
@@ -81,7 +81,7 @@ test entry points define the extension; PR #7 carries the source for review.
 | Check | Observed scope and result |
 | --- | --- |
 | uripack regression suite | 190 tests passed against the local uripack checkout |
-| uriprocess Python suite | 23 tests passed, including five POA uripack integration cases, three native-runner cases, six native-package cases and three evidence/mode cases |
+| uriprocess Python suite | 25 tests passed, including five POA uripack integration cases, three native-runner cases, six native-package cases and five evidence/mode cases |
 | Upstream source identity | Each provenance file compared directly with its pinned Git object |
 | Upstream behavior | 4 currency and 13 readiness tests passed natively, inside Docker, and against offline-installed npm packages |
 | CLI portability | Two input vectors per process matched native, container and installed npm command output |
@@ -97,7 +97,7 @@ test entry points define the extension; PR #7 carries the source for review.
 | Native provenance boundaries | Missing tests, widened URI sets, duplicate/unsafe selected paths and an incomplete self-consistent provenance record were rejected |
 | Hub authorization boundary | Mocked-HTTP tests reject missing execution authorization and invalid scope identifiers; valid requests retain the exact grant/intent and bounded timeout |
 | Control connector boundaries | Original fixture tests preserve tunnel read-only checks, intake validation, grant-gated harvest and secret-field filtering |
-| Test completeness | JUnit case evidence must be nonempty with no skipped, failed or errored cases; installed case count must equal source count |
+| Test completeness | JUnit case evidence must be nonempty with no skipped, failed or errored cases; installed test identities (class/module and parameterized name, including multiplicity) must equal source identities |
 | Checkout portability | Git-equivalent group-write permissions are accepted; changing the owner executable bit changes the compared Git mode |
 
 The synthetic Guard is confined to `tests/test_uripack.py`. Its receipts use
@@ -301,14 +301,19 @@ Canonical mode means Git's executable distinction, 100644 versus 100755;
 local umask or ACL group-write permissions do not change that distinction.
 The checker parses JUnit cases instead of treating pytest exit zero as complete
 evidence. Empty, skipped, failed, malformed or errored test reports are rejected,
-as is a different installed test count. Successful receipts record each package's
-`upstream_test_count`. The test-only Guard uses the same completeness check.
+as is a different installed test identity, including a changed parameter ID or
+module even when the total count is unchanged. Case order may differ; repeated
+identities retain their multiplicity. Successful receipts record each package's
+`upstream_test_count`, identity comparison and the relative paths and SHA-256
+digests of both preserved JUnit reports. The test-only Guard uses the same
+completeness check.
 Inherited credentials and pytest plugin auto-loading are excluded from these
 subprocesses. Tests replace HTTP with their original fixtures; no Control or
 Twin request is sent to production. The source package never receives build,
 installation or test-cache files.
 
-Output retains all six wheels, a private build/test log, and `verification.json`
+Output retains all six wheels, twelve private JUnit reports, a private build/test
+log, and `verification.json`
 with source revisions, dependency versions, route sets and wheel digests.
 `URIPROCESS_CONNECTORS_SOURCE` must be set to include the six native-package
 integration cases in ordinary unittest discovery; otherwise they are explicitly

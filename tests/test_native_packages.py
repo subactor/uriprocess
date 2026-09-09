@@ -16,6 +16,29 @@ from test_uripack import TestGuard
 
 
 class NativeTestEvidenceTests(unittest.TestCase):
+    def test_equal_counts_cannot_hide_replaced_parameter_or_module(self):
+        from check_native import matching_test_cases
+        with tempfile.TemporaryDirectory() as temporary:
+            source, installed = (Path(temporary) / name for name in ("source.xml", "installed.xml"))
+            source.write_text("<testsuite><testcase classname='tests.ticket' name='test_route[allowed]'/></testsuite>")
+            for module, name in (("tests.ticket", "test_route[denied]"), ("tests.other", "test_route[allowed]")):
+                installed.write_text(f"<testsuite><testcase classname='{module}' name='{name}'/></testsuite>")
+                with self.subTest(module=module, name=name), self.assertRaisesRegex(ValueError, "identities"):
+                    matching_test_cases(source, installed)
+
+    def test_identity_comparison_ignores_order_but_preserves_multiplicity(self):
+        from check_native import matching_test_cases
+        with tempfile.TemporaryDirectory() as temporary:
+            source, installed = (Path(temporary) / name for name in ("source.xml", "installed.xml"))
+            def report(names):
+                return "<testsuite>" + "".join(f"<testcase name='{name}'/>" for name in names) + "</testsuite>"
+            source.write_text(report(["a", "a", "b"]))
+            installed.write_text(report(["b", "a", "a"]))
+            self.assertEqual(matching_test_cases(source, installed), 3)
+            installed.write_text(report(["a", "b", "b"]))
+            with self.assertRaisesRegex(ValueError, "identities"):
+                matching_test_cases(source, installed)
+
     def test_group_writable_checkout_preserves_git_mode_but_execution_changes_it(self):
         from check_native import git_file_mode
         with tempfile.TemporaryDirectory() as temporary:
@@ -32,7 +55,8 @@ class NativeTestEvidenceTests(unittest.TestCase):
         from check_native import complete_test_count
         reports = ["<testsuite tests='100' failures='0'/>", "<testsuite><testcase><skipped/></testcase></testsuite>",
                    "<testsuite><testcase><failure/></testcase></testsuite>",
-                   "<testsuite><testcase><error/></testcase></testsuite>", "<invalid"]
+                   "<testsuite><testcase><error/></testcase></testsuite>",
+                   "<testsuite><testcase/></testsuite>", "<invalid"]
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "report.xml"
             for report in reports:

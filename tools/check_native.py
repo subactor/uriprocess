@@ -27,7 +27,7 @@ def git_file_mode(path):
     return 0o755 if Path(path).stat().st_mode & 0o100 else 0o644
 
 
-def complete_test_count(report):
+def complete_test_cases(report):
     """Require observed passing cases, not just pytest's exit code or counters."""
     try:
         document = ET.parse(report).getroot()
@@ -37,7 +37,22 @@ def complete_test_count(report):
     if (document.tag not in {"testsuite", "testsuites"} or not cases
             or any(case.find(tag) is not None for case in cases for tag in ("skipped", "failure", "error"))):
         raise ValueError("Native test evidence is incomplete: missing, skipped or failed cases")
-    return len(cases)
+    if any(not case.get("name") for case in cases):
+        raise ValueError("Native test evidence has an unnamed case")
+    # Keep duplicates and parameter IDs: equal totals do not prove that the
+    # installed wheel exercised the same upstream behavior.
+    return sorted((case.get("classname", ""), case.get("name")) for case in cases)
+
+
+def complete_test_count(report):
+    return len(complete_test_cases(report))
+
+
+def matching_test_cases(source_report, installed_report):
+    source_cases = complete_test_cases(source_report)
+    if complete_test_cases(installed_report) != source_cases:
+        raise ValueError("Installed native test identities differ from source")
+    return len(source_cases)
 
 
 def check(root, source, output, builder):
@@ -102,12 +117,12 @@ def check(root, source, output, builder):
                 tests = sorted((copied / "tests").glob("test_*.py"))
                 if not tests:
                     raise ValueError("Native upstream tests missing")
-                source_report = temporary / "source-tests.xml"
+                distribution = output / package["id"]
+                distribution.mkdir()
+                source_report = distribution / "source-tests.xml"
                 run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--junitxml", str(source_report), *map(str, tests)],
                     temporary, copied)
                 source_test_count = complete_test_count(source_report)
-                distribution = output / package["id"]
-                distribution.mkdir()
                 run([builder, "-m", "build", "--wheel", "--no-isolation", "--outdir", str(distribution), str(copied)], temporary)
                 wheels = list(distribution.glob("*.whl"))
                 if len(wheels) != 1:
@@ -118,10 +133,9 @@ def check(root, source, output, builder):
                 # imports must use the installed wheel, not the source checkout.
                 test_root = temporary / "tests"
                 shutil.copytree(copied / "tests", test_root)
-                installed_report = temporary / "installed-tests.xml"
+                installed_report = distribution / "installed-tests.xml"
                 run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--junitxml", str(installed_report), str(test_root)], temporary, installed)
-                if complete_test_count(installed_report) != source_test_count:
-                    raise ValueError("Installed native test coverage differs from source")
+                matching_test_cases(source_report, installed_report)
                 probe = '''import importlib, importlib.metadata, json, pathlib, sys
 target, name, expected = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2], set(json.loads(sys.argv[3]))
 dist = importlib.metadata.distribution(name)
@@ -141,6 +155,10 @@ assert routes == expected, 'Installed URI bindings differ from native manifest'
                     "wheel_sha256": hashlib.sha256(wheels[0].read_bytes()).hexdigest(),
                     "dependencies": dependencies, "source_tests": "passed", "installed_tests": "passed",
                     "upstream_test_count": source_test_count,
+                    "test_identity_comparison": "passed",
+                    "test_reports": {label: {"path": str(report.relative_to(output)),
+                        "sha256": hashlib.sha256(report.read_bytes()).hexdigest()}
+                        for label, report in (("source", source_report), ("installed", installed_report))},
                     "installed_bindings": "passed", "upstream_git_comparison": "passed"})
     receipt = {"schema": "uriprocess.native-package-verification/v1", "status": "passed", "packages": results,
                "dependency_installation": "preinstalled-runtime; offline-wheel-install-without-dependency-resolution",
