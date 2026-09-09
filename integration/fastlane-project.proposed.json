@@ -1,0 +1,110 @@
+{
+  "schema": "organism.guard.fastlane-project/v1",
+  "project_id": "subactor-uriprocess",
+  "units": [
+    {
+      "id": "ticket-currency",
+      "component": "ticket-currency",
+      "root": "poa/ticket-currency/subactor.com/v1",
+      "profile": "node",
+      "artifact": "cli",
+      "target": "host",
+      "capabilities": [
+        "subactor.com.ticket-currency.decision"
+      ],
+      "depends_on": [],
+      "write_paths": [
+        "poa/ticket-currency/subactor.com/v1/bin.mjs",
+        "poa/ticket-currency/subactor.com/v1/src/ticket-currency.mjs",
+        "poa/ticket-currency/subactor.com/v1/src/ticket-readiness.mjs"
+      ],
+      "read_paths": [
+        "poa/ticket-currency/subactor.com/v1/package.json",
+        "poa/ticket-currency/subactor.com/v1/package-lock.json",
+        "poa/ticket-currency/subactor.com/v1/process.poa.json",
+        "poa/ticket-currency/subactor.com/v1/provenance.json",
+        "poa/ticket-currency/subactor.com/v1/uriprocess.json",
+        "poa/ticket-currency/subactor.com/v1/Dockerfile",
+        "poa/ticket-currency/subactor.com/v1/.dockerignore",
+        "poa/ticket-currency/subactor.com/v1/tests/ticket-currency.test.mjs"
+      ],
+      "export_paths": [
+        "poa/ticket-currency/subactor.com/v1/bin.mjs",
+        "poa/ticket-currency/subactor.com/v1/src/ticket-currency.mjs",
+        "poa/ticket-currency/subactor.com/v1/src/ticket-readiness.mjs",
+        "poa/ticket-currency/subactor.com/v1/package.json",
+        "poa/ticket-currency/subactor.com/v1/package-lock.json",
+        "poa/ticket-currency/subactor.com/v1/process.poa.json",
+        "poa/ticket-currency/subactor.com/v1/provenance.json",
+        "poa/ticket-currency/subactor.com/v1/uriprocess.json",
+        "poa/ticket-currency/subactor.com/v1/Dockerfile",
+        "poa/ticket-currency/subactor.com/v1/.dockerignore",
+        "poa/ticket-currency/subactor.com/v1/tests/ticket-currency.test.mjs"
+      ],
+      "validators": [
+        "test-ticket-currency"
+      ]
+    },
+    {
+      "id": "ticket-readiness",
+      "component": "ticket-readiness",
+      "root": "poa/ticket-readiness/subactor.com/v1",
+      "profile": "node",
+      "artifact": "cli",
+      "target": "host",
+      "capabilities": [
+        "subactor.com.ticket-readiness.decision"
+      ],
+      "depends_on": [],
+      "write_paths": [
+        "poa/ticket-readiness/subactor.com/v1/bin.mjs",
+        "poa/ticket-readiness/subactor.com/v1/src/ticket-readiness.mjs"
+      ],
+      "read_paths": [
+        "poa/ticket-readiness/subactor.com/v1/package.json",
+        "poa/ticket-readiness/subactor.com/v1/package-lock.json",
+        "poa/ticket-readiness/subactor.com/v1/process.poa.json",
+        "poa/ticket-readiness/subactor.com/v1/provenance.json",
+        "poa/ticket-readiness/subactor.com/v1/uriprocess.json",
+        "poa/ticket-readiness/subactor.com/v1/Dockerfile",
+        "poa/ticket-readiness/subactor.com/v1/.dockerignore",
+        "poa/ticket-readiness/subactor.com/v1/tests/ticket-readiness.test.mjs"
+      ],
+      "export_paths": [
+        "poa/ticket-readiness/subactor.com/v1/bin.mjs",
+        "poa/ticket-readiness/subactor.com/v1/src/ticket-readiness.mjs",
+        "poa/ticket-readiness/subactor.com/v1/package.json",
+        "poa/ticket-readiness/subactor.com/v1/package-lock.json",
+        "poa/ticket-readiness/subactor.com/v1/process.poa.json",
+        "poa/ticket-readiness/subactor.com/v1/provenance.json",
+        "poa/ticket-readiness/subactor.com/v1/uriprocess.json",
+        "poa/ticket-readiness/subactor.com/v1/Dockerfile",
+        "poa/ticket-readiness/subactor.com/v1/.dockerignore",
+        "poa/ticket-readiness/subactor.com/v1/tests/ticket-readiness.test.mjs"
+      ],
+      "validators": [
+        "test-ticket-readiness"
+      ]
+    }
+  ],
+  "validators": [
+    {
+      "id": "test-ticket-currency",
+      "argv": [
+        "node",
+        "--test",
+        "poa/ticket-currency/subactor.com/v1/tests/ticket-currency.test.mjs"
+      ],
+      "timeout_seconds": 30
+    },
+    {
+      "id": "test-ticket-readiness",
+      "argv": [
+        "node",
+        "--test",
+        "poa/ticket-readiness/subactor.com/v1/tests/ticket-readiness.test.mjs"
+      ],
+      "timeout_seconds": 30
+    }
+  ]
+}

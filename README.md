@@ -25,3 +25,8 @@ retains fail-closed behavior.
 [Native Guard observation and its limits](docs/information/guard-observation.md)
 uses the existing Guard API for exact-revision Git observations. It grants no
 execution or publication authority.
+
+[Native Guard export](docs/information/native-guard-export.md) adds planning,
+separately admitted execution and verified package retrieval. The full local
+HTTP/CLI/Docker/npm test is `make test-guard-export`; production provisioning
+and independent publication are separate prerequisites.
