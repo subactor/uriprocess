@@ -1,0 +1,147 @@
+{
+  "id": "plesk",
+  "name": "Plesk",
+  "version": "0.15.0",
+  "status": "available",
+  "category": "Infrastructure",
+  "summary": "Manage Plesk through vault-backed REST, XML, SFTP and profiled extension URI processes.",
+  "description": "The connector discovers installed Plesk extensions through the official XML extension operator and joins them with reviewed operation profiles. Unknown extensions remain visible but non-executable. Credentials are never accepted in URI payloads or returned in results.",
+  "useCases": [
+    "Bootstrap a Plesk REST API key without exposing administrator credentials.",
+    "Read every subscription and domain visible to one Plesk account login.",
+    "Read domains, clients, subscriptions, and other Plesk API resources.",
+    "Execute authorized Plesk API changes through auditable URI processes.",
+    "Discover installed Plesk extensions and route only reviewed operations."
+  ],
+  "flowExample": [
+    "plesk://host/auth/command/bootstrap-api-key",
+    "plesk://host/auth/query/acquisition-methods",
+    "plesk://host/auth/query/scopes",
+    "plesk://host/auth/query/status",
+    "plesk://host/extensions/query/catalog",
+    "plesk://host/extensions/query/capabilities",
+    "plesk://host/account/query/subscriptions",
+    "plesk://host/subscription/query/capabilities",
+    "plesk://host/subscription/query/snapshot",
+    "plesk://host/domain/command/ensure",
+    "plesk://host/dns/query/records",
+    "plesk://host/dns/query/authority",
+    "plesk://host/dns/query/propagation",
+    "plesk://host/dns/command/replace",
+    "plesk://host/dns/command/reconcile",
+    "plesk://host/api/query/request"
+  ],
+  "requires": [
+    "python>=3.10",
+    "Plesk Obsidian REST API v2 and XML API 1.6.8+",
+    "urirun credential vault"
+  ],
+  "install": {
+    "mode": "urirun-extra",
+    "pipSpec": "urirun-connector-plesk @ git+https://github.com/urirun-connectors/urirun-connector-plesk.git@v0.14.0"
+  },
+  "provenance": "verified",
+  "publisher": {
+    "name": "if-uri",
+    "url": "https://ifuri.com",
+    "github": "https://github.com/urirun-connectors"
+  },
+  "docsUrl": "https://github.com/urirun-connectors/urirun-connector-plesk",
+  "keywords": [
+    "plesk",
+    "hosting",
+    "domains",
+    "mail",
+    "rest-api",
+    "xml-api",
+    "extensions",
+    "vault"
+  ],
+  "uriSchemes": [
+    "plesk"
+  ],
+  "authConformance": {
+    "schema": "subactor.connector-auth-status/v1",
+    "statusRoute": "plesk://host/auth/query/status",
+    "scopesRoute": "plesk://host/auth/query/scopes",
+    "acquisitionMethodsRoute": "plesk://host/auth/query/acquisition-methods",
+    "bootstrapRoute": "plesk://host/auth/command/bootstrap-api-key",
+    "secretValueVisible": false
+  },
+  "routes": [
+    "plesk://host/api/command/request",
+    "plesk://host/api/query/request",
+    "plesk://host/auth/command/bootstrap-api-key",
+    "plesk://host/auth/query/acquisition-methods",
+    "plesk://host/auth/query/scopes",
+    "plesk://host/auth/query/status",
+    "plesk://host/account/query/subscriptions",
+    "plesk://host/dns/command/reconcile",
+    "plesk://host/dns/command/replace",
+    "plesk://host/dns/query/authority",
+    "plesk://host/dns/query/propagation",
+    "plesk://host/dns/query/records",
+    "plesk://host/doctor/query/report",
+    "plesk://host/domain/command/ensure",
+    "plesk://host/extension/command/call",
+    "plesk://host/extension/query/call",
+    "plesk://host/extensions/query/capabilities",
+    "plesk://host/extensions/query/catalog",
+    "plesk://host/ftpuser/command/ensure",
+    "plesk://host/mailbox/command/create",
+    "plesk://host/mailbox/command/ensure",
+    "plesk://host/mailbox/query/status",
+    "plesk://host/session/command/mutate-lease",
+    "plesk://host/session/query/mutate-lease",
+    "plesk://host/site/command/publish",
+    "plesk://host/site/command/publish-verify",
+    "plesk://host/site/command/release-activate",
+    "plesk://host/site/command/release-rollback",
+    "plesk://host/site/command/release-upload",
+    "plesk://host/site/command/release-verify",
+    "plesk://host/site/command/reverse-proxy-ensure",
+    "plesk://host/site/command/ssl-ensure",
+    "plesk://host/site/command/subdomain-ensure",
+    "plesk://host/site/command/sync",
+    "plesk://host/site/command/twin-sync",
+    "plesk://host/site/query/docroot",
+    "plesk://host/site/query/methods",
+    "plesk://host/site/query/release-current",
+    "plesk://host/site/query/remote-inventory",
+    "plesk://host/site/query/twin-current",
+    "plesk://host/subscription/query/capabilities",
+    "plesk://host/subscription/query/snapshot"
+  ],
+  "examples": [
+    {
+      "title": "Create and store a Plesk API key",
+      "uri": "plesk://host/auth/command/bootstrap-api-key",
+      "payload": {}
+    },
+    {
+      "title": "List domains",
+      "uri": "plesk://host/api/query/request",
+      "payload": {
+        "path": "/api/v2/domains"
+      }
+    },
+    {
+      "title": "Dry-run www → httpdocs sync",
+      "uri": "plesk://host/site/command/sync",
+      "payload": {
+        "source_dir": "/repo/www",
+        "source_ref": "workspace:www",
+        "deployment_binding_ref": "deployment:subactor-com:production",
+        "deployment_binding_hash": "<sha256-of-binding>",
+        "deployment_binding_version": 1,
+        "remote_path": "/httpdocs",
+        "host": "prototypowanie.pl",
+        "domain": "subactor.com",
+        "apply": false
+      }
+    }
+  ],
+  "adapterKinds": [
+    "local-function"
+  ]
+}

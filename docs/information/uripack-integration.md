@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 11,
+  "version": 13,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "e22a1fffbe20bcde855561884ac8a303a09d9a53",
+  "source_revision": "75cf2be8ae3e0732ecebb8ec92208a69e003e10a",
   "affected_repositories": [
     "subactor/uriprocess"
   ],
@@ -19,6 +19,11 @@
     "repo://subactor/uriprocess/tools/generate_native_catalog.py",
     "repo://subactor/uriprocess/tests/test_native_catalog.py",
     "repo://subactor/uriprocess/selections/native-v1.json",
+    "repo://subactor/uriprocess/selections/native-v2.json",
+    "repo://subactor/uriprocess/selections/twin-map-v1.json",
+    "repo://subactor/uriprocess/tests/test_twin_map.py",
+    "https://github.com/subactor/connectors/pull/44",
+    "https://github.com/subactor/connectors/pull/46",
     "repo://subactor/uriprocess/selections/platform-v1.json",
     "https://github.com/subactor/platform/tree/0102f2518e8bc1081447f373783503ab3b8d122f",
     "repo://subactor/uriprocess/tools/check.py",
@@ -81,8 +86,8 @@ routes for binding discovery, CLI status, planning and authorized execution,
 one tunnel preflight route, two browser intake routes and one grant-gated
 harvest route. Their existing package
 names, versions, dependencies and `urirun.bindings` entry points are unchanged.
-Version 11 adds the two Platform packages described below. The ten packages
-therefore cover twenty-five original URI identities. The metadata source
+Version 11 added the two Platform packages described below. Version 12 adds
+twin-map; the eleven packages cover thirty-one original URI identities. The metadata source
 revision identifies the URIprocess implementation base for this change.
 
 The preparation tool explicitly imports the installed `uripack_refactor` package.
@@ -749,3 +754,55 @@ tools before operational extraction. Additional processes require explicit
 source revisions, complete file selections, compatible adapters and upstream
 behavior tests. Retain existing source and bindings until separately authorized
 consumer migration and independent acceptance readback are complete.
+
+## Twin-map extraction (version 12)
+
+`selections/twin-map-v1.json` copies all twenty original package files from
+Connectors revision `2f48389fa19b75fda68eb81803e32551ebf51bb0`. Distribution
+`urirun-connector-subactor-twin-map` remains version 0.3.0. Six original routes
+under `twin://plesk/map/query/` cover attestation, conformance, resolve, refresh,
+snapshot and proposal. Native metadata, dependencies, runtime source and binding
+entry points retain their exact upstream bytes. The original test suite now has
+portable immutable fixtures and runs all 39 cases; source and installed wheel
+must report identical case identities with no skips.
+
+`selections/native-v2.json` retains the exact two historical selection digests
+and adds the independently pinned twin-map source. Batch version 2 permits
+another revision of the same repository; duplicate source IDs, repeated repository
+revision pairs and overlapping package/URI ownership remain errors. Version 1
+keeps its earlier repository uniqueness rule. The eight previous native packages
+remain byte-identical, including provenance. The current native catalog contains
+nine packages and twenty-nine URI routes, alongside two POA packages.
+
+Supply `URIPROCESS_TWIN_SOURCE` for the new immutable Git input in addition to
+existing source variables when running `make test`. A full local Connectors Git
+repository can supply both revisions. An executor with separate shallow inputs
+passes each path explicitly. `check_native.py --source-map REPOSITORY@REVISION=PATH`
+selects a revision-specific input before an unqualified repository mapping;
+missing or wrong pins cannot produce a success receipt. Offline binding discovery
+uses a disposable twin cache and does not contact the upstream catalog.
+
+Six new integration/regression tests reproduce the combined catalog, preserve
+historical pins, exercise the actual URIpack planner and extraction with the test
+Guard, verify all original source bytes and run the 39 source/wheel cases.
+Their test Guard is not a production Guard identity. The pinned manufacturing
+standard's existing python-native-v1 profile applies without a new runtime
+contract. New files remain outside Platform's artifact registry coverage; the
+repository's pinned Docs checker and package conformance checks apply.
+
+The upstream [portable conformance contract](https://github.com/subactor/connectors/blob/2f48389fa19b75fda68eb81803e32551ebf51bb0/docs/information/twin-map-conformance.md)
+explains the signed historical baseline, separate JavaScript pins and excluded
+invalid current baseline. These are test prerequisites. Source extraction does
+not switch runtime consumers, re-sign upstream data, publish a distribution to
+PyPI or establish unattended production execution.
+
+## Explicit fixture clarity (version 13)
+
+The selected source includes the test-only clarification in Connectors PR #46.
+The generated signing object is named `ephemeral_signer`, and the invalid
+credential-bearing repository URL uses an explicit inert placeholder. All 39
+cases and signer checks remain. The selection binds the exact reviewed PR head,
+which must have an independently observed protected merge before publication.
+This source correction preserves byte identity during extraction and leaves
+publication rules unchanged. The metadata revision identifies the preceding
+URIprocess implementation commit.

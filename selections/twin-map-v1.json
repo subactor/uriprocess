@@ -1,0 +1,41 @@
+{
+  "schema": "uriprocess.native-selection/v1",
+  "source_repository": "https://github.com/subactor/connectors",
+  "source_revision": "2f48389fa19b75fda68eb81803e32551ebf51bb0",
+  "packages": [
+    {
+      "package_root": "urirun-connector-subactor-twin-map",
+      "manifest": "urirun_connector_subactor_twin_map/connector.manifest.json",
+      "public_uris": [
+        "twin://plesk/map/query/attestation",
+        "twin://plesk/map/query/conformance",
+        "twin://plesk/map/query/resolve",
+        "twin://plesk/map/query/refresh",
+        "twin://plesk/map/query/snapshot",
+        "twin://plesk/map/query/proposal"
+      ],
+      "files": [
+        "urirun-connector-subactor-twin-map/pyproject.toml",
+        "urirun-connector-subactor-twin-map/tests/conftest.py",
+        "urirun-connector-subactor-twin-map/tests/fixtures/core/package.json",
+        "urirun-connector-subactor-twin-map/tests/fixtures/core/src/capability.mjs",
+        "urirun-connector-subactor-twin-map/tests/fixtures/pins.json",
+        "urirun-connector-subactor-twin-map/tests/fixtures/plesk/baseline/plesk-surface.v1.attestation.json",
+        "urirun-connector-subactor-twin-map/tests/fixtures/plesk/baseline/plesk-surface.v1.json",
+        "urirun-connector-subactor-twin-map/tests/fixtures/plesk/src/map.mjs",
+        "urirun-connector-subactor-twin-map/tests/fixtures/providers/urirun-connector-namecheap-dns/LICENSE",
+        "urirun-connector-subactor-twin-map/tests/fixtures/providers/urirun-connector-namecheap-dns/NOTICE",
+        "urirun-connector-subactor-twin-map/tests/fixtures/providers/urirun-connector-namecheap-dns/urirun_connector_namecheap_dns/connector.manifest.json",
+        "urirun-connector-subactor-twin-map/tests/fixtures/providers/urirun-connector-plesk/LICENSE",
+        "urirun-connector-subactor-twin-map/tests/fixtures/providers/urirun-connector-plesk/urirun_connector_plesk/connector.manifest.json",
+        "urirun-connector-subactor-twin-map/tests/test_baseline_loader.py",
+        "urirun-connector-subactor-twin-map/tests/test_twin_map.py",
+        "urirun-connector-subactor-twin-map/urirun_connector_subactor_twin_map/__init__.py",
+        "urirun-connector-subactor-twin-map/urirun_connector_subactor_twin_map/baseline/plesk-surface.v1.json",
+        "urirun-connector-subactor-twin-map/urirun_connector_subactor_twin_map/baseline_loader.py",
+        "urirun-connector-subactor-twin-map/urirun_connector_subactor_twin_map/connector.manifest.json",
+        "urirun-connector-subactor-twin-map/urirun_connector_subactor_twin_map/core.py"
+      ]
+    }
+  ]
+}

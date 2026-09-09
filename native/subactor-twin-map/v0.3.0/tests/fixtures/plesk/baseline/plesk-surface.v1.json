@@ -1,0 +1,240 @@
+{
+  "schema": "uri-twin.baseline/v1",
+  "twin_family": "plesk",
+  "version": "3",
+  "summary": "Reviewed Plesk service, resource and workflow map loaded from git by default. Live API observation enriches instance data but never grants a new executable route.",
+  "environment": {
+    "kind": "plesk-panel",
+    "required_bindings": ["instance_id", "panel_url"],
+    "optional_bindings": ["dns_management_plane"],
+    "isolation": "One baseline serves many panels; credentials and observations are scoped by instance_id."
+  },
+  "services": [
+    {
+      "id": "plesk-xml-api",
+      "connector": "urirun-connector-plesk",
+      "transport": "xml-api",
+      "discovery_uri": "plesk://host/subscription/query/capabilities",
+      "summary": "Subscription, domain, mailbox and DNS operations available to the bound Plesk account."
+    },
+    {
+      "id": "plesk-rest-v2",
+      "connector": "urirun-connector-plesk",
+      "transport": "rest-v2",
+      "discovery_uri": "plesk://host/auth/query/scopes",
+      "summary": "Administrator REST surface under /api/v2; authority is not interchangeable with XML subscription ownership."
+    },
+    {
+      "id": "plesk-extensions",
+      "connector": "urirun-connector-plesk",
+      "transport": "extension-xml",
+      "discovery_uri": "plesk://host/extensions/query/catalog",
+      "summary": "Installed extension inventory joined only with reviewed operation profiles."
+    },
+    {
+      "id": "plesk-subscription-files",
+      "connector": "urirun-connector-plesk",
+      "transport": "sftp",
+      "discovery_uri": "plesk://host/site/query/methods",
+      "summary": "Subscription-scoped file transport used after docroot observation and dry-run."
+    },
+    {
+      "id": "namecheap-dns-api",
+      "connector": "urirun-connector-namecheap-dns",
+      "transport": "https-api",
+      "discovery_uri": "dns://host/records/query/current",
+      "summary": "Alternative public DNS management plane selected only when the environment binding says Namecheap."
+    }
+  ],
+  "resource_types": [
+    {"id": "plesk.subscription", "service": "plesk-xml-api", "query_uri": "plesk://host/subscription/query/snapshot", "identity_fields": ["id", "name"]},
+    {"id": "plesk.site", "service": "plesk-xml-api", "query_uri": "plesk://host/site/query/docroot", "identity_fields": ["domain"]},
+    {"id": "plesk.extension", "service": "plesk-extensions", "query_uri": "plesk://host/extensions/query/catalog", "identity_fields": ["id"]},
+    {"id": "dns.zone", "service": "plesk-xml-api", "query_uri": "plesk://host/dns/query/authority", "identity_fields": ["hostname"]}
+  ],
+  "workflows": {
+    "publish-site": {"requires": ["plesk.site.publish"], "outcome": "Content is published only after live subscription and docroot observation."},
+    "publish-site-with-tls": {"requires": ["plesk.site.publish", "plesk.ssl.ensure"], "outcome": "Content and TLS are ready on the bound Plesk panel."},
+    "publish-site-with-managed-dns": {"requires": ["plesk.site.publish", "dns.records.reconcile", "plesk.ssl.ensure"], "outcome": "Content, selected DNS management plane and TLS are reconciled by an ordered multi-connector plan."},
+    "create-mailbox": {"requires": ["plesk.mailbox.create"], "outcome": "Mailbox exists on a subscription observed before mutation."},
+    "observe-topology": {"requires": ["plesk.subscription.snapshot", "plesk.site.docroot"], "outcome": "Current subscription and site topology are represented as twin facts."}
+  },
+  "credential_handles": {
+    "plesk-admin-api-key": {
+      "transport": "rest-v2",
+      "authority": "server administrator",
+      "note": "REST v2 is restricted to /api/v2/. Never used for subscription file writes."
+    },
+    "plesk-xml-subscription-owner": {
+      "transport": "xml-api",
+      "authority": "customer account that owns the subscription",
+      "note": "The panel admin login and mailbox users are rejected by the XML API with 1001/1006. Using the admin credential here is the most common cause of a false 'panel unreachable' report."
+    },
+    "plesk-sftp-subscription-user": {
+      "transport": "sftp",
+      "authority": "subscription system user",
+      "note": "Never equivalent to server administrator access; scoped to one subscription docroot."
+    },
+    "plesk-root-ssh": {
+      "transport": "ssh",
+      "authority": "server root",
+      "note": "Not implemented by the subscription transport. Declared so that a plan needing it fails with a named gap instead of silently attempting SFTP."
+    },
+    "namecheap-dns-api": {
+      "transport": "https-api",
+      "authority": "DNS records for one Namecheap-managed zone",
+      "note": "A vault handle representing the API user, key, username and allowlisted client IP; values never enter the twin map."
+    }
+  },
+  "capabilities": [
+    {
+      "id": "plesk.subscription.snapshot",
+      "effect": "query",
+      "transport": "xml-api",
+      "risk": "R0",
+      "requires_credentials": ["plesk-xml-subscription-owner"],
+      "provided_by": [
+        {"connector": "urirun-connector-plesk", "uri": "plesk://host/subscription/query/snapshot"}
+      ],
+      "summary": "Subscription list and domain capacity, used for planning before any domain is created"
+    },
+    {
+      "id": "plesk.site.docroot",
+      "effect": "query",
+      "transport": "xml-api",
+      "risk": "R0",
+      "requires_credentials": ["plesk-xml-subscription-owner"],
+      "requires_capabilities": ["plesk.subscription.snapshot"],
+      "provided_by": [
+        {"connector": "urirun-connector-plesk", "uri": "plesk://host/site/query/docroot"}
+      ],
+      "summary": "Live docroot / www_root decision fact for one domain"
+    },
+    {
+      "id": "plesk.dns.authority",
+      "effect": "query",
+      "transport": "xml-api",
+      "risk": "R0",
+      "requires_credentials": ["plesk-xml-subscription-owner"],
+      "provided_by": [
+        {"connector": "urirun-connector-plesk", "uri": "plesk://host/dns/query/authority"}
+      ],
+      "summary": "Which plane actually answers for the hostname"
+    },
+    {
+      "id": "plesk.extensions.catalog",
+      "effect": "query",
+      "transport": "extension-xml",
+      "risk": "R0",
+      "requires_credentials": ["plesk-admin-api-key"],
+      "provided_by": [
+        {"connector": "urirun-connector-plesk", "uri": "plesk://host/extensions/query/catalog"}
+      ],
+      "summary": "Authoritative installed-extension state; the enrichment source for this map"
+    },
+    {
+      "id": "plesk.site.publish",
+      "effect": "command",
+      "transport": "sftp",
+      "risk": "R2",
+      "requires_credentials": ["plesk-sftp-subscription-user"],
+      "requires_capabilities": ["plesk.site.docroot"],
+      "provided_by": [
+        {
+          "connector": "urirun-connector-plesk",
+          "uri": "plesk://host/site/command/publish",
+          "preconditions": ["docroot fact documented in the plan", "dry-run plan_hash matches apply"]
+        }
+      ],
+      "summary": "Write site content into the resolved docroot. Requires the docroot fact first so publishing cannot target a guessed path."
+    },
+    {
+      "id": "plesk.mailbox.create",
+      "effect": "command",
+      "transport": "rest-v2",
+      "risk": "R2",
+      "requires_credentials": ["plesk-admin-api-key"],
+      "requires_capabilities": ["plesk.subscription.snapshot"],
+      "provided_by": [
+        {"connector": "urirun-connector-plesk", "uri": "plesk://host/mailbox/command/create"}
+      ],
+      "summary": "Create a mailbox on a subscription domain"
+    },
+    {
+      "id": "plesk.ssl.ensure",
+      "effect": "command",
+      "transport": "extension-xml",
+      "risk": "R2",
+      "requires_credentials": ["plesk-admin-api-key"],
+      "requires_feature_flags": ["has_ssl_it"],
+      "requires_capabilities": ["plesk.extensions.catalog", "plesk.dns.authority"],
+      "provided_by": [
+        {
+          "connector": "urirun-connector-plesk",
+          "uri": "plesk://host/site/command/ssl-ensure",
+          "preconditions": ["operation present in extension_profiles.json"]
+        }
+      ],
+      "summary": "Issue or renew a certificate through SSL It!. Depends on DNS authority because a certificate cannot be validated for a hostname this panel does not answer for."
+    },
+    {
+      "id": "dns.records.current",
+      "effect": "query",
+      "transport": "provider-api",
+      "risk": "R0",
+      "requires_credentials": [],
+      "provided_by": [
+        {
+          "connector": "urirun-connector-plesk",
+          "uri": "plesk://host/dns/query/records",
+          "requires_credentials": ["plesk-xml-subscription-owner"],
+          "requires_bindings": {"dns_management_plane": ["plesk", "cloudflaredns"]}
+        },
+        {
+          "connector": "urirun-connector-namecheap-dns",
+          "uri": "dns://host/records/query/current",
+          "requires_credentials": ["namecheap-dns-api"],
+          "requires_bindings": {"dns_management_plane": "namecheap"}
+        }
+      ],
+      "summary": "Read the current DNS zone through the management plane selected by the environment binding."
+    },
+    {
+      "id": "dns.records.reconcile",
+      "effect": "command",
+      "transport": "provider-api",
+      "risk": "R2",
+      "requires_credentials": [],
+      "requires_capabilities": ["dns.records.current"],
+      "provided_by": [
+        {
+          "connector": "urirun-connector-plesk",
+          "uri": "plesk://host/dns/command/reconcile",
+          "requires_credentials": ["plesk-xml-subscription-owner"],
+          "requires_bindings": {"dns_management_plane": ["plesk", "cloudflaredns"]},
+          "preconditions": ["authority twin confirms Plesk management plane"]
+        },
+        {
+          "connector": "urirun-connector-namecheap-dns",
+          "uri": "dns://host/records/command/apply",
+          "requires_credentials": ["namecheap-dns-api"],
+          "requires_bindings": {"dns_management_plane": "namecheap"},
+          "preconditions": ["backup artifact exists", "explicit apply confirmation and authority remain external to the twin"]
+        }
+      ],
+      "summary": "Reconcile DNS through Plesk or Namecheap without changing the workflow; provider choice follows observed environment binding and route availability."
+    },
+    {
+      "id": "plesk.server.utility",
+      "status": "planned",
+      "effect": "command",
+      "transport": "ssh",
+      "risk": "R3",
+      "requires_credentials": ["plesk-root-ssh"],
+      "provided_by": [
+        {"connector": "urirun-connector-plesk", "uri": "plesk://host/server/command/utility"}
+      ],
+      "summary": "Server-level CLI utilities with no remote API equivalent. Declared but intentionally uncredentialed in the standard binding."
+    }
+  ]
+}

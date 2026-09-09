@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-subactor-twin-map"
+version = "0.3.0"
+description = "Capability-map URI Process: resolve an intent into a connector plan or one named gap"
+requires-python = ">=3.10"
+dependencies = ["cryptography>=45", "urirun>=0.4.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.entry-points."urirun.bindings"]
+subactor-twin-map = "urirun_connector_subactor_twin_map.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_subactor_twin_map*"]
+
+[tool.setuptools.package-data]
+urirun_connector_subactor_twin_map = ["connector.manifest.json", "baseline/*.json"]

@@ -1,0 +1,18 @@
+{
+  "name": "@uri-twin/core",
+  "version": "0.2.3",
+  "private": false,
+  "description": "URI-twin fact envelope and validators (observe-only)",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./capability": "./src/capability.mjs",
+    "./schema": "./schemas/twin-fact.v1.json"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
