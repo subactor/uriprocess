@@ -1,0 +1,92 @@
+{
+  "schema": "wellmanifest.uriprocess/policy/v1",
+  "standard": "wellmanifest/uriprocess",
+  "version": "0.1.0",
+  "home": "wellmanifest",
+  "shape": "domain_pack",
+  "profiles": {
+    "poa-node-v1": {
+      "manifest_schema": "uriprocess.package/v1",
+      "generated_files": [
+        "uriprocess.json",
+        "provenance.json",
+        "package.json",
+        "package-lock.json",
+        "bin.mjs",
+        "Dockerfile",
+        ".dockerignore"
+      ]
+    },
+    "python-native-v1": {
+      "manifest_schema": "uriprocess.native-package/v1",
+      "generated_files": [
+        "uriprocess.json",
+        "provenance.json"
+      ]
+    }
+  },
+  "requirements": [
+    {
+      "id": "URP-001",
+      "requirement": "Retain original complete URI identities and reject ownership collisions."
+    },
+    {
+      "id": "URP-002",
+      "requirement": "Select exact upstream Git commits and explicit source, dependency and test files."
+    },
+    {
+      "id": "URP-003",
+      "requirement": "Preserve source bytes, Git executable modes, native metadata, entry points and license terms."
+    },
+    {
+      "id": "URP-004",
+      "requirement": "Use an explicit compatible package profile; reject unsupported formats."
+    },
+    {
+      "id": "URP-005",
+      "requirement": "Verify upstream identity, original behavior and installed distribution; preserve complete test identities."
+    },
+    {
+      "id": "URP-006",
+      "requirement": "Apply URIpack plans only through independently protected Guard; preserve uncertain outcomes without replay."
+    },
+    {
+      "id": "URP-007",
+      "requirement": "Publish using independent exact-head/current-base verification and authenticated merge evidence."
+    },
+    {
+      "id": "URP-008",
+      "requirement": "Require fresh deployment planning, current authority and independent production acceptance for cutover."
+    },
+    {
+      "id": "URP-009",
+      "requirement": "Pin adoption by immutable source revision and complete bundle digest; upgrades are explicit."
+    },
+    {
+      "id": "URP-010",
+      "requirement": "Add new profiles with schemas, representative sources and positive and negative conformance cases."
+    }
+  ],
+  "errors": {
+    "URP-DATA-001": "Malformed, duplicate-key or oversized input document.",
+    "URP-SCHEMA-001": "Input violates a supported package or provenance schema.",
+    "URP-PATH-001": "Unsafe path, symlink, special file or inventory limit.",
+    "URP-INTEGRITY-001": "Package file set, source digest or executable mode differs.",
+    "URP-IDENTITY-001": "URI or native package identity differs from its preserved contract.",
+    "URP-TESTS-001": "Required original tests are absent from provenance."
+  },
+  "conformance_scope": [
+    "package_structure",
+    "declared_source_hashes",
+    "declared_git_modes",
+    "native_identity"
+  ],
+  "excluded_evidence": [
+    "upstream_git_authenticity",
+    "test_execution",
+    "guard_authentication",
+    "merge_authority",
+    "production_acceptance"
+  ],
+  "execution_authority": false
+}

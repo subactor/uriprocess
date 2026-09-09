@@ -1,0 +1,8 @@
+{
+  "schema": "wellmanifest.uriprocess/adoption/v1",
+  "repository": "subactor/uriprocess",
+  "standard": "wellmanifest/uriprocess",
+  "version": "0.1.0",
+  "source_revision": "32704f47634aa393b87f8b398a7903d719eece92",
+  "bundle_sha256": "837456dbbd58f3ba9d44788a3987fd351e300167d94945ca6c999c3a4816a885"
+}

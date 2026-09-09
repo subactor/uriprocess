@@ -1,7 +1,10 @@
-.PHONY: test test-docker test-all test-guard test-guard-export test-uripack test-native-export test-native-packages test-repository-plans pack
+.PHONY: test test-standard test-docker test-all test-guard test-guard-export test-uripack test-native-export test-native-packages test-repository-plans pack
 test:
 	python3 -m unittest discover -s tests -v
+	python3 -B tools/check_standard.py
 	python3 tools/check.py
+test-standard:
+	python3 -B tools/check_standard.py
 test-docker:
 	python3 tools/check.py --docker
 test-all: test test-docker
