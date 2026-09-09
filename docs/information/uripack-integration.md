@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 12,
+  "version": 13,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "f93ef0e55f0d404f93c1bf8725e452abdb931677",
+  "source_revision": "75cf2be8ae3e0732ecebb8ec92208a69e003e10a",
   "affected_repositories": [
     "subactor/uriprocess"
   ],
@@ -23,6 +23,7 @@
     "repo://subactor/uriprocess/selections/twin-map-v1.json",
     "repo://subactor/uriprocess/tests/test_twin_map.py",
     "https://github.com/subactor/connectors/pull/44",
+    "https://github.com/subactor/connectors/pull/46",
     "repo://subactor/uriprocess/selections/platform-v1.json",
     "https://github.com/subactor/platform/tree/0102f2518e8bc1081447f373783503ab3b8d122f",
     "repo://subactor/uriprocess/tools/check.py",
@@ -757,7 +758,7 @@ consumer migration and independent acceptance readback are complete.
 ## Twin-map extraction (version 12)
 
 `selections/twin-map-v1.json` copies all twenty original package files from
-Connectors merge `682fd8df177196b2474a6d3ce1537cabc47304ad`. Distribution
+Connectors revision `2f48389fa19b75fda68eb81803e32551ebf51bb0`. Distribution
 `urirun-connector-subactor-twin-map` remains version 0.3.0. Six original routes
 under `twin://plesk/map/query/` cover attestation, conformance, resolve, refresh,
 snapshot and proposal. Native metadata, dependencies, runtime source and binding
@@ -789,8 +790,19 @@ standard's existing python-native-v1 profile applies without a new runtime
 contract. New files remain outside Platform's artifact registry coverage; the
 repository's pinned Docs checker and package conformance checks apply.
 
-The upstream [portable conformance contract](https://github.com/subactor/connectors/blob/682fd8df177196b2474a6d3ce1537cabc47304ad/docs/information/twin-map-conformance.md)
+The upstream [portable conformance contract](https://github.com/subactor/connectors/blob/2f48389fa19b75fda68eb81803e32551ebf51bb0/docs/information/twin-map-conformance.md)
 explains the signed historical baseline, separate JavaScript pins and excluded
 invalid current baseline. These are test prerequisites. Source extraction does
 not switch runtime consumers, re-sign upstream data, publish a distribution to
 PyPI or establish unattended production execution.
+
+## Explicit fixture clarity (version 13)
+
+The selected source includes the test-only clarification in Connectors PR #46.
+The generated signing object is named `ephemeral_signer`, and the invalid
+credential-bearing repository URL uses an explicit inert placeholder. All 39
+cases and signer checks remain. The selection binds the exact reviewed PR head,
+which must have an independently observed protected merge before publication.
+This source correction preserves byte identity during extraction and leaves
+publication rules unchanged. The metadata revision identifies the preceding
+URIprocess implementation commit.

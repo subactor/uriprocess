@@ -1,7 +1,7 @@
 {
   "schema": "uriprocess.native-selection/v1",
   "source_repository": "https://github.com/subactor/connectors",
-  "source_revision": "682fd8df177196b2474a6d3ce1537cabc47304ad",
+  "source_revision": "2f48389fa19b75fda68eb81803e32551ebf51bb0",
   "packages": [
     {
       "package_root": "urirun-connector-subactor-twin-map",

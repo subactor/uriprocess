@@ -15,7 +15,7 @@
     {
       "source_id": "twin",
       "selection": "selections/twin-map-v1.json",
-      "selection_sha256": "a685c332eda5f45122cf255a33c84863927376a70c43f9eff96289f7a1bc3c4f"
+      "selection_sha256": "58dde0318729478214726f3bcb756c3e00c8bbd69b89267ef4e056a00331a677"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schema": "uriprocess.provenance/v1",
   "repository": "https://github.com/subactor/connectors",
-  "revision": "682fd8df177196b2474a6d3ce1537cabc47304ad",
+  "revision": "2f48389fa19b75fda68eb81803e32551ebf51bb0",
   "files": [
     {
       "source": "urirun-connector-subactor-twin-map/pyproject.toml",
@@ -85,7 +85,7 @@
       "source": "urirun-connector-subactor-twin-map/tests/test_baseline_loader.py",
       "destination": "tests/test_baseline_loader.py",
       "mode": 420,
-      "sha256": "0cd2a8aa2ab346d65d87cd95905ea3a8562ca74e49c00c3b0fc1c58149820930"
+      "sha256": "3dcfce1cdd7990d260afec848b1efc6231c533f988edddcad3d1c9e5641555f0"
     },
     {
       "source": "urirun-connector-subactor-twin-map/tests/test_twin_map.py",

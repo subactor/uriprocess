@@ -52,8 +52,8 @@ def catalog(repository="https://github.com/uri-twin/uri-twin-plesk.git"):
 
 
 def signed_attestation(document, repository="https://github.com/uri-twin/uri-twin-plesk.git"):
-    private_key = Ed25519PrivateKey.generate()
-    public_der = private_key.public_key().public_bytes(
+    ephemeral_signer = Ed25519PrivateKey.generate()
+    public_der = ephemeral_signer.public_key().public_bytes(
         encoding=serialization.Encoding.DER,
         format=serialization.PublicFormat.SubjectPublicKeyInfo,
     )
@@ -72,7 +72,7 @@ def signed_attestation(document, repository="https://github.com/uri-twin/uri-twi
         },
         "signer": {"id": signer_id, "algorithm": "ed25519", "public_key_sha256": fingerprint},
     }
-    signature = private_key.sign(json.dumps(statement, sort_keys=True, separators=(",", ":")).encode())
+    signature = ephemeral_signer.sign(json.dumps(statement, sort_keys=True, separators=(",", ":")).encode())
     attestation = {**statement, "signature": base64.b64encode(signature).decode()}
     allowed = {signer_id: {
         "algorithm": "ed25519",
@@ -229,7 +229,7 @@ def test_embedded_baseline_is_last_resort(tmp_path):
 
 @pytest.mark.parametrize("repository", [
     "https://user:password@github.com/uri-twin/uri-twin-plesk.git",
-    "https://github.com/uri-twin/uri-twin-plesk.git?token=nope",
+    "https://github.com/uri-twin/uri-twin-plesk.git?token=placeholder",
     "git@github.com:uri-twin/uri-twin-plesk.git",
 ])
 def test_repository_source_rejects_embedded_credentials_and_unsafe_schemes(tmp_path, repository):
