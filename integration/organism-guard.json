@@ -1,0 +1,10 @@
+{
+  "schema": "uriprocess.guard-compatibility/v1",
+  "repository": "https://github.com/subactor/organism-guard",
+  "source_revision": "c982569141cd85a799b5f6ddb6cc423a56e23470",
+  "version": "0.9.0",
+  "contract_sha256": "5bde88196983bc51fafa37af37742e68f13c0af136125004aaeb0ceeaf03a117",
+  "scope": "read-only-client-compatibility",
+  "execution_authority": false,
+  "python_tree_sha256": "557ac17ed75b808dca2d4ffb3172cd16485d51da61357d96547a4311a29880eb"
+}
