@@ -1,0 +1,24 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "twin://plesk/map/query/attestation",
+    "twin://plesk/map/query/conformance",
+    "twin://plesk/map/query/resolve",
+    "twin://plesk/map/query/refresh",
+    "twin://plesk/map/query/snapshot",
+    "twin://plesk/map/query/proposal"
+  ],
+  "native_manifest": "urirun_connector_subactor_twin_map/connector.manifest.json",
+  "native_distribution": "urirun-connector-subactor-twin-map",
+  "native_version": "0.3.0",
+  "entry_points": {
+    "subactor-twin-map": "urirun_connector_subactor_twin_map.core:bindings"
+  },
+  "dependencies": [
+    "cryptography>=45",
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

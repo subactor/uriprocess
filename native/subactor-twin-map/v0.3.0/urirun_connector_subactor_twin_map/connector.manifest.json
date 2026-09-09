@@ -1,0 +1,27 @@
+{
+  "id": "subactor-twin-map",
+  "name": "Subactor Twin Capability Map",
+  "status": "preview",
+  "category": "Autonomy",
+  "summary": "Resolves an intent into an ordered connector plan or one named missing precondition.",
+  "description": "Loads the reviewed Plesk twin directly from Git, retains a validated last-known-good fallback, joins it with live API inventory and held credential handles, then answers whether an intent is executable across one or more connectors. Query effect only: it plans, it never mutates. API observation may enrich resources or downgrade readiness but can never grant an unreviewed route.",
+  "requires": ["python>=3.10"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["twin"],
+  "adapterKinds": ["local-function"],
+  "routes": [
+    "twin://plesk/map/query/attestation",
+    "twin://plesk/map/query/conformance",
+    "twin://plesk/map/query/resolve",
+    "twin://plesk/map/query/refresh",
+    "twin://plesk/map/query/snapshot",
+    "twin://plesk/map/query/proposal"
+  ],
+  "baseline": {
+    "source": "https://github.com/uri-twin/uri-twin-plesk",
+    "path": "baseline/plesk-surface.v1.json",
+    "ref": "main",
+    "loading": "git-primary with exact commit provenance; validated cache then embedded package data are availability-only fallbacks; live API only enriches"
+  }
+}

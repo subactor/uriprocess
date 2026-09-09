@@ -59,8 +59,9 @@ class NativeCatalogTests(unittest.TestCase):
     def test_batch_reproduces_all_packages_and_the_tracked_catalog(self):
         candidate = self.root / "candidate"
         generate_catalog(config(), ROOT, self.sources, candidate)
-        self.assertEqual((candidate / "native-catalog.json").read_bytes(), (ROOT / "native-catalog.json").read_bytes())
         packages = json.loads((candidate / "native-catalog.json").read_text())["packages"]
+        tracked = {p["id"]: p for p in json.loads((ROOT / "native-catalog.json").read_text())["packages"]}
+        self.assertEqual(packages, [tracked[p["id"]] for p in packages])
         self.assertEqual(len(packages), 8)
         self.assertEqual(sum(len(p["public_uris"]) for p in packages), 23)
         for package in packages:
@@ -114,7 +115,9 @@ class NativeCatalogTests(unittest.TestCase):
     def test_all_native_wheels_preserve_upstream_cases_and_real_installed_bindings(self):
         from check_native import check
         sources = {"https://github.com/subactor/" + key: value for key, value in self.sources.items()}
-        result = check(ROOT, sources, self.root / "wheels", sys.executable)
+        candidate = self.root / "historical-catalog"
+        generate_catalog(config(), ROOT, self.sources, candidate)
+        result = check(candidate, sources, self.root / "wheels", sys.executable)
         self.assertEqual(result["status"], "passed")
         self.assertEqual(len(result["packages"]), 8)
         self.assertFalse(result["production_calls"])

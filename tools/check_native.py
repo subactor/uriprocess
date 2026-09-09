@@ -72,8 +72,8 @@ def check(root, source, output, builder):
            "PYTHONDONTWRITEBYTECODE": "1", "PYTHONNOUSERSITE": "1",
            "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1", "PIP_NO_INDEX": "1"}
     with (output / "verification.log").open("xb") as log:
-        def run(argv, cwd, pythonpath=None):
-            command_env = {**env, **({"PYTHONPATH": str(pythonpath)} if pythonpath else {})}
+        def run(argv, cwd, pythonpath=None, extra_env=None):
+            command_env = {**env, **({"PYTHONPATH": str(pythonpath)} if pythonpath else {}), **(extra_env or {})}
             return subprocess.run(argv, cwd=cwd, env=command_env, check=True, stdout=log, stderr=subprocess.STDOUT)
 
         for package in catalog["packages"]:
@@ -87,9 +87,12 @@ def check(root, source, output, builder):
                     raise ValueError("Native package integrity mismatch")
             provenance = json.loads((base / "provenance.json").read_text())
             if sources is not None:
-                if provenance["repository"] not in sources:
+                key = provenance["repository"] + "@" + provenance["revision"]
+                if key not in sources:
+                    key = provenance["repository"]
+                if key not in sources:
                     raise ValueError("Explicit source repository mapping is incomplete")
-                source = sources[provenance["repository"]]
+                source = sources[key]
             destinations = [item["destination"] for item in provenance["files"]]
             if (len(destinations) != len(set(destinations))
                     or set(destinations) != actual - {"provenance.json", "uriprocess.json"}):
@@ -157,7 +160,11 @@ for ep in entries:
 assert routes == expected, 'Installed URI bindings differ from native manifest'
 '''
                 run([sys.executable, "-c", probe, str(installed), metadata["native_distribution"],
-                     json.dumps(package["public_uris"])], temporary, installed)
+                     json.dumps(package["public_uris"])], temporary, installed,
+                    # Loading bindings may initialize twin-map. Keep discovery
+                    # offline with a disposable cache; signed conformance is
+                    # exercised by the complete original tests above.
+                    {"URI_TWIN_OFFLINE": "1", "URI_TWIN_CACHE_DIR": str(temporary / "probe-cache")})
                 results.append({"id": package["id"], "source_revision": provenance["revision"],
                     "source_repository": provenance["repository"],
                     "public_uris": package["public_uris"], "wheel": str(wheels[0].relative_to(output)),

@@ -1,0 +1,77 @@
+{
+  "schema": "subactor.twin-map-test-inputs/v1",
+  "version": 1,
+  "purpose": "offline conformance fixtures only; no production authority",
+  "files": [
+    {
+      "path": "plesk/src/map.mjs",
+      "repository": "https://github.com/uri-twin/uri-twin-plesk",
+      "revision": "31754cc768c4cb22662a1f89fe729a1693a2f853",
+      "source": "src/map.mjs",
+      "sha256": "92e999dca09c1ac8e2c8ee2c68401e5bc63ad86459ef58032d9b0aa4958cbfe2"
+    },
+    {
+      "path": "plesk/baseline/plesk-surface.v1.json",
+      "repository": "https://github.com/uri-twin/uri-twin-plesk",
+      "revision": "ccac492dab72df9b7f785bab60ac322007c83587",
+      "source": "baseline/plesk-surface.v1.json",
+      "sha256": "24faaf6e1ec40bd1da40054f217532344c264f1d5a1cee41d8412e825aeecebb"
+    },
+    {
+      "path": "plesk/baseline/plesk-surface.v1.attestation.json",
+      "repository": "https://github.com/uri-twin/uri-twin-plesk",
+      "revision": "ccac492dab72df9b7f785bab60ac322007c83587",
+      "source": "baseline/plesk-surface.v1.attestation.json",
+      "sha256": "a72db0919134c572cee8a837f6996aac3544c08aebff6c6dfd7f572ec6461d03"
+    },
+    {
+      "path": "core/package.json",
+      "repository": "https://github.com/uri-twin/uri-twin-core",
+      "revision": "bf70afd88a74f86f603581e1dc47cfa9cc97130c",
+      "source": "package.json",
+      "sha256": "9a3b87b7f0e1dfc425722bf876bbf2e36dec03315e01d646a003d0017bbb2c62"
+    },
+    {
+      "path": "core/src/capability.mjs",
+      "repository": "https://github.com/uri-twin/uri-twin-core",
+      "revision": "bf70afd88a74f86f603581e1dc47cfa9cc97130c",
+      "source": "src/capability.mjs",
+      "sha256": "fd28fdb1e2b5be8bb5a415fbadc7d9261bf302d74e17d62775f370f6387350fa"
+    },
+    {
+      "path": "providers/urirun-connector-plesk/urirun_connector_plesk/connector.manifest.json",
+      "repository": "https://github.com/urirun-connectors/urirun-connector-plesk",
+      "revision": "a56a9196bb8a8de380d419811c7f462fcda946e5",
+      "source": "urirun_connector_plesk/connector.manifest.json",
+      "sha256": "666417520ec79528f74a973386a1283d99dc50c97f0326cb020459e9a2834c39"
+    },
+    {
+      "path": "providers/urirun-connector-plesk/LICENSE",
+      "repository": "https://github.com/urirun-connectors/urirun-connector-plesk",
+      "revision": "a56a9196bb8a8de380d419811c7f462fcda946e5",
+      "source": "LICENSE",
+      "sha256": "26e8ea904e1e75db090b69537f9e9a27e18fa00087df7c506497a072264de0ca"
+    },
+    {
+      "path": "providers/urirun-connector-namecheap-dns/urirun_connector_namecheap_dns/connector.manifest.json",
+      "repository": "https://github.com/urirun-connectors/urirun-connector-namecheap-dns",
+      "revision": "8dc79d441ba1e89c0f739f369abcc22b2db23662",
+      "source": "urirun_connector_namecheap_dns/connector.manifest.json",
+      "sha256": "968dd18328b28a2824521d411c6960d3cac326a15195ee72682212b71ccfe229"
+    },
+    {
+      "path": "providers/urirun-connector-namecheap-dns/LICENSE",
+      "repository": "https://github.com/urirun-connectors/urirun-connector-namecheap-dns",
+      "revision": "8dc79d441ba1e89c0f739f369abcc22b2db23662",
+      "source": "LICENSE",
+      "sha256": "1458ed9c74a435139a807a54d06d48ff9cb9bbc6f4c884e5bb858932735469d1"
+    },
+    {
+      "path": "providers/urirun-connector-namecheap-dns/NOTICE",
+      "repository": "https://github.com/urirun-connectors/urirun-connector-namecheap-dns",
+      "revision": "8dc79d441ba1e89c0f739f369abcc22b2db23662",
+      "source": "NOTICE",
+      "sha256": "6edf5eef91ce745e4c0cd046dfca71e08f1290412524f95838889e765cbe4c19"
+    }
+  ]
+}

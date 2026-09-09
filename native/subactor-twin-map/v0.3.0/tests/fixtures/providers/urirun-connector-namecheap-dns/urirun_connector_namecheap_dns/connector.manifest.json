@@ -1,0 +1,53 @@
+{
+  "id": "namecheap-dns",
+  "name": "Namecheap DNS",
+  "status": "available",
+  "version": "0.1.0",
+  "summary": "Safe DNS plan, backup and apply routes for Namecheap host records.",
+  "repository": "https://github.com/if-uri/urirun-connector-namecheap-dns",
+  "install": {
+    "mode": "urirun-extra",
+    "pipSpec": "urirun-connector-namecheap-dns @ git+https://github.com/if-uri/urirun-connector-namecheap-dns.git@v0.1.0"
+  },
+  "examples": [
+    {
+      "uri": "dns://host/records/command/plan",
+      "payload": {
+        "domain": "example.com",
+        "current_records": "[{\"Name\":\"@\",\"Type\":\"A\",\"Address\":\"203.0.113.10\"}]",
+        "desired_records": "[{\"Name\":\"@\",\"Type\":\"A\",\"Address\":\"203.0.113.11\"}]"
+      }
+    },
+    {
+      "uri": "dns://host/records/command/backup",
+      "payload": {
+        "domain": "example.com",
+        "current_records": "[{\"Name\":\"@\",\"Type\":\"A\",\"Address\":\"203.0.113.10\"}]"
+      }
+    },
+    {
+      "uri": "dns://host/records/command/apply",
+      "payload": {
+        "domain": "example.com",
+        "confirm": true,
+        "mock_apply": true,
+        "backup_uri": "artifact://host/namecheap/dns-backup/example.com/REVIEWED",
+        "desired_records": "[{\"Name\":\"@\",\"Type\":\"A\",\"Address\":\"203.0.113.11\"}]"
+      }
+    }
+  ],
+  "routes": [
+    "dns://host/doctor/query/report",
+    "dns://host/records/command/apply",
+    "dns://host/records/command/backup",
+    "dns://host/records/command/plan",
+    "dns://host/records/query/current",
+    "dns://host/records/query/expected"
+  ],
+  "uriSchemes": [
+    "dns"
+  ],
+  "adapterKinds": [
+    "local-function"
+  ]
+}

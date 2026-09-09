@@ -14,7 +14,7 @@ from generate_native import generate_native
 def selected_groups(config, selection_root, sources):
     if (set(config) != {"schema", "version", "groups"}
             or config["schema"] != "uriprocess.native-batch-selection/v1"
-            or type(config["version"]) is not int or config["version"] != 1
+            or type(config["version"]) is not int or config["version"] not in {1, 2}
             or not isinstance(config["groups"], list) or not config["groups"]):
         raise ValueError("Unsupported native batch selection")
     root = Path(selection_root).resolve()
@@ -35,7 +35,11 @@ def selected_groups(config, selection_root, sources):
         selection = json.loads(data)
         if selection.get("schema") != "uriprocess.native-selection/v1":
             raise ValueError("A native source selection is required")
+        # Version 2 permits another immutable revision of an existing source.
+        # Keep earlier package provenance intact during incremental extraction.
         repository = selection["source_repository"]
+        if config["version"] == 2:
+            repository = (repository, selection["source_revision"])
         if repository in repositories:
             raise ValueError("Duplicate native source repository")
         repositories.add(repository)
