@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 9,
+  "version": 10,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-09",
   "review_after": "2026-10-09",
-  "source_revision": "f1bb2b3020585bb0ef32a44997d07ef733e20d75",
+  "source_revision": "0fa85142b30dd7707ae061f4c34de62e97af3395",
   "affected_repositories": [
     "subactor/uriprocess"
   ],
@@ -38,7 +38,10 @@
     "repo://subactor/uriprocess/tools/verify_repositories.py",
     "repo://subactor/uriprocess/tests/test_repository_verification.py",
     "repo://subactor/uriprocess/tools/apply_repositories.py",
-    "repo://subactor/uriprocess/tests/test_repository_application.py"
+    "repo://subactor/uriprocess/tests/test_repository_application.py",
+    "https://github.com/subactor/uriprocess/pull/8",
+    "repo://subactor/uriprocess/tools/inspect_repositories.py",
+    "repo://subactor/uriprocess/tests/test_repository_inspection.py"
   ]
 }
 ---
@@ -85,8 +88,11 @@ uses uripack's extraction-plan contract, not a Strategy execution receipt.
 Local validation on 2026-09-09 used Python 3, Node 22.23.1, Docker 29.1.3 and
 the uripack source revision linked in metadata. The metadata source revision
 identifies the implementation base of this local increment. PR #7 contains the
-earlier package integration; subsequent repository planning, verification and
-batch application remain local changes until separately published.
+earlier package integration. Repository planning, verification and batch
+application were published in protected PR #8, merged as
+`0fa85142b30dd7707ae061f4c34de62e97af3395`. Their publication does not attest
+to production migration. The inspection extension below has its own validation
+and publication lifecycle.
 
 | Check | Observed scope and result |
 | --- | --- |
@@ -553,8 +559,9 @@ An attempt marker without a completion record also survives abrupt process loss.
 If local publication happened before a failed completion, URIpack preserves its
 `MATERIALIZED_PENDING_COMPLETION` target. Existing targets are rejected on the
 next invocation: their independent recovery belongs to the protected Guard
-controller, not a blind retry or deletion by this tool. This deliberately leaves
-unknown-outcome reconciliation as a separate, unimplemented integration.
+controller, not a blind retry or deletion by this tool. Read-only inspection is
+available below. Resolution of unknown outcomes remains a separate protected
+integration.
 
 The complete Python suite passed 55 tests without skips. Eight added tests
 exercise all eight extractions with separate synthetic test-role
@@ -565,7 +572,77 @@ upstream tests through the existing test Guard. It does not demonstrate an
 operational bridge deployment. The canonical cross-repository investigation and
 remaining integration work belong to
 [subactor/docs: URI migration autonomy](repo://subactor/docs/architecture/analysis/uri-process-migration-autonomy.md)
-(local ticket branch; not yet published).
+(published in [Docs PR #148](https://github.com/subactor/docs/pull/148)).
+
+### Inspect an interrupted repository batch
+
+`tools/inspect_repositories.py` observes every selected destination, including a
+partially materialized batch. It first runs the same independent reconstruction
+against the explicitly supplied selection and pinned upstream Git objects.
+Changed source, plan or index bindings stop inspection before target readback.
+
+```bash
+python3 -B tools/inspect_repositories.py \
+  --selection selections/repositories-v1.json \
+  --package-source /path/to/uriprocess \
+  --source runtime=/path/to/runtime \
+  --source connectors=/path/to/connectors \
+  --workspace /private/recovery/repository-plans
+```
+
+The JSON result goes to stdout. The tool creates no batch receipt and does not
+modify the batch, targets, source repositories, application evidence or writer
+state. Temporary upstream reconstruction is removed after verification. It
+never calls Guard, applies a plan, retries an effect or removes a lock.
+
+| Per-repository status | Local observation |
+| --- | --- |
+| `not_materialized` | No target entry was present in the initial directory inventory; this does not establish that a prior attempt had no effects. |
+| `extracted_local` | Artifact files and executable modes match the pinned plan; the local receipt, checks and event chain are consistent with `EXTRACTED`. |
+| `pending_completion` | Artifact and local receipt are consistent with `MATERIALIZED_PENDING_COMPLETION`; protected resolution remains outstanding. |
+| `inconsistent` | The target, artifact or receipt cannot be verified, or the receipt changed during readback. Other selected repositories are still inspected. |
+
+Receipt verification binds the plan, artifact and source hashes, copied-file
+count, required check subjects, event order and local hash chain. A rehashed
+receipt for another plan or artifact is rejected. These are local consistency
+checks against the pinned URIpack executor format; they do not authenticate the
+Guard identity or decision references. Even a fully forged but self-consistent
+receipt cannot grant execution authority through this tool.
+
+The observation also reports writer-lock presence and the number of matching
+staging entries. It does not enter staging directories or read lock contents.
+Symlinks and special receipt files are rejected by URIpack's no-follow reader.
+The destination directory inventory is limited to 4096 direct entries; exceeding
+that bound fails preflight. Unexpected entries are counted without copying their
+names or contents into the result.
+
+Pending completion, inconsistent targets, writer/staging state, unexpected
+entries or an observed directory change produce `requires_reconciliation` and
+exit code 2. Valid observations without those findings produce `observed` and
+exit code 0, including an empty or partially extracted batch. Invalid preflight
+produces a bounded `blocked` diagnostic and exit code 2. No status means that
+migration or protected recovery has completed.
+
+The result always retains `automatic_retry=false`, `execution_authority=false`,
+`guard_receipts_authenticated=false`, `remote_publication=false` and
+`production_cutover=false`. `observation_atomic=false` describes the actual
+sequential readback: the tool compares directory metadata before and after the
+scan and receipt bytes around artifact verification, but cannot exclude every
+concurrent modification. Coordinate a quiescent observation with the writer
+owner and use independent Guard recovery before deciding on further effects.
+The separate batch application's journal is preserved but is not authenticated
+or reconciled by this inspector.
+
+Local validation on 2026-09-09 passed the complete 66-case Python suite with
+no omitted cases, the 17 original POA tests and the existing Docker checks.
+The eleven inspection cases cover empty, partial and complete extraction,
+failed completion, artifact corruption, rehashed receipt binding changes,
+malformed/missing/symlink/special receipts, preserved writer and staging state,
+concurrent receipt and directory changes, pinned-source preflight and CLI
+exit/status behavior. Tests use the existing synthetic test Guard only to
+prepare real URIpack artifacts; inspection itself is checked to make no Guard
+or apply calls. The pinned Docs checker and Platform artifact build/check also
+passed; the latter still has no coverage entry for this repository.
 
 <!-- docs:section limitations -->
 ## Limitations
