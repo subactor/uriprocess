@@ -165,7 +165,12 @@ class NativePackageTests(unittest.TestCase):
         candidate = self.root / "current/candidate"
         packages = json.loads((candidate / "native-catalog.json").read_text())["packages"]
         current = {p["path"]: p for p in json.loads((ROOT / "native-catalog.json").read_text())["packages"]}
-        self.assertEqual(packages, [current[p["path"]] for p in packages])
+        for package in packages:
+            if package["id"] == "subactor-account-twin":
+                self.assertEqual(package["path"], "native/subactor-account-twin/v0.1.0")
+                self.assertNotIn(package["path"], current)
+            else:
+                self.assertEqual(package, current[package["path"]])
         self.assertEqual(len(packages), 6)
         self.assertEqual(sum(len(p["public_uris"]) for p in packages), 19)
         result = apply_plan(plan, TestGuard())

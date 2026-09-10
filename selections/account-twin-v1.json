@@ -1,0 +1,30 @@
+{
+  "schema": "uriprocess.native-selection/v1",
+  "source_repository": "https://github.com/subactor/connectors",
+  "source_revision": "7f95cca1933522454dfdaf91d4fd1c8f4b2a4c6d",
+  "packages": [
+    {
+      "package_root": "urirun-connector-subactor-account-twin",
+      "manifest": "urirun_connector_subactor_account_twin/connector.manifest.json",
+      "public_uris": [
+        "twin://subactor/account/query/combinations",
+        "twin://subactor/account/query/deployments",
+        "twin://subactor/account/query/entities",
+        "twin://subactor/account/query/organizations",
+        "twin://subactor/account/query/project-reconciliations",
+        "twin://subactor/account/query/projects",
+        "twin://subactor/account/query/repositories",
+        "twin://subactor/account/query/sources",
+        "twin://subactor/account/query/summary",
+        "twin://subactor/account/query/tickets"
+      ],
+      "files": [
+        "urirun-connector-subactor-account-twin/pyproject.toml",
+        "urirun-connector-subactor-account-twin/tests/test_account_twin.py",
+        "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/__init__.py",
+        "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/connector.manifest.json",
+        "urirun-connector-subactor-account-twin/urirun_connector_subactor_account_twin/core.py"
+      ]
+    }
+  ]
+}

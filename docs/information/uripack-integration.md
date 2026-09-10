@@ -3,14 +3,14 @@
   "schema": "wellmanifest.docs/document/v1",
   "id": "uripack-integration",
   "kind": "information",
-  "version": 14,
+  "version": 15,
   "title": "uripack integration and migration checks",
   "status": "implemented",
   "owner": "subactor/uriprocess",
   "created": "2026-09-09",
   "updated": "2026-09-10",
   "review_after": "2026-10-10",
-  "source_revision": "68189ddf956bf02a1e8f90ce4318eaeeb24a0515",
+  "source_revision": "c3ebaa91f186e495ca354fd5bc85159cc07ca65f",
   "affected_repositories": [
     "subactor/uriprocess"
   ],
@@ -54,7 +54,11 @@
     "repo://subactor/uriprocess/tests/test_repository_inspection.py",
     "repo://subactor/uriprocess/tools/export_poa_consumer.py",
     "repo://subactor/uriprocess/tests/test_poa_consumer.py",
-    "https://github.com/subactor/uriprocess/issues/17"
+    "https://github.com/subactor/uriprocess/issues/17",
+    "https://github.com/subactor/connectors/tree/7f95cca1933522454dfdaf91d4fd1c8f4b2a4c6d",
+    "repo://subactor/uriprocess/selections/account-twin-v1.json",
+    "repo://subactor/uriprocess/selections/native-v3.json",
+    "repo://subactor/uriprocess/tests/test_account_twin.py"
   ]
 }
 ---
@@ -845,3 +849,56 @@ immutable pins, missing or extra source files, changed blobs and symlinks, forge
 contract identity, destination reuse, and changed consumer bytes or modes.
 Neither catalog checks nor the lock authenticate protected merge or production
 deployment. The catalog remains eleven packages and thirty-one URI identities.
+
+
+### Version 15 — callable Account Twin exports and immutable package upgrade
+
+The active catalog selects Account Twin 0.1.1 from the independently merged
+Connectors PR #48, revision `7f95cca1933522454dfdaf91d4fd1c8f4b2a4c6d`.
+`selections/account-twin-v1.json` selects all five original package files,
+including the complete source test suite. Its ten URI identities are unchanged.
+The new package lives at `native/subactor-account-twin/v0.1.1`; the historical
+0.1.0 directory and prior selections remain byte-identical and auditable.
+
+`selections/connectors-v4.json` retains the original source revision for the
+other five connector packages. `selections/native-v3.json` combines that
+selection with the unchanged Platform and twin-map selections and the separate
+Account Twin revision. This is still batch schema version 2. Only the active
+Account Twin package changes; the catalog still owns 9 native packages and
+29 URI identities, alongside the 2 POA packages.
+
+The earlier package serialized a missing `core:query_resource` export for every
+route. The upstream fix assigns the exported function name before registration.
+Its 16 tests include ten real calls through `python -m urirun.exec`, each against
+a loopback HTTP fixture from outside the package directory. The source and
+installed-wheel runs must exercise exactly the same cases with zero skips.
+These fixture queries are not production usage evidence.
+
+Installed binding verification now imports each serialized Python target from
+the installed tree and checks it is callable. Missing exports, noncallable
+attributes, imports outside that tree and duplicate route ownership fail the
+check before a success receipt. The receipt records the number of
+`installed_callable_exports`. This proves resolution only; the preserved
+upstream tests provide behavioral coverage. General registration still does not
+prove credentials, backend health or successful production invocation.
+
+Six new tests cover valid/invalid exports, a full reproduction of the active
+catalog, real URIpack extraction and rejection of the historical broken
+Account Twin wheel. Historical batch tests continue reconstructing and comparing
+the retained original files. The eight-package source/wheel gate uses the fixed
+active Account Twin selection while preserving its other seven source pins;
+the existing twin-map test separately verifies all 39 original cases.
+
+Supply `URIPROCESS_ACCOUNT_SOURCE` explicitly in addition to the existing source
+variables. Local full Git repositories may supply the old and new revisions;
+protected executors retain them as separate pinned shallow repositories. A
+revision-qualified mapping to `check_native.py` selects the new Account Twin
+input without silently substituting it for historical Connectors sources.
+The OneDev input update has its own independent publication and canary boundary.
+
+The [upstream binding contract](https://github.com/subactor/connectors/blob/7f95cca1933522454dfdaf91d4fd1c8f4b2a4c6d/docs/information/account-twin-bindings.md)
+and the [canonical production audit](https://github.com/subactor/docs/blob/2bb84393244b80217465397b30129e4167a223cd/architecture/analysis/uri-process-migration-autonomy.md)
+distinguish the corrected source from deployment acceptance. Publishing this
+package does not replace the active legacy mount or compiled URIrun registry.
+A deployment must select the package, rebuild discovery and independently
+read back its source digest, ten exact exports and successful query result.

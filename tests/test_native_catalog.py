@@ -61,7 +61,12 @@ class NativeCatalogTests(unittest.TestCase):
         generate_catalog(config(), ROOT, self.sources, candidate)
         packages = json.loads((candidate / "native-catalog.json").read_text())["packages"]
         tracked = {p["id"]: p for p in json.loads((ROOT / "native-catalog.json").read_text())["packages"]}
-        self.assertEqual(packages, [tracked[p["id"]] for p in packages])
+        for package in packages:
+            if package["id"] == "subactor-account-twin":
+                self.assertEqual(package["path"], "native/subactor-account-twin/v0.1.0")
+                self.assertEqual(package["public_uris"], tracked[package["id"]]["public_uris"])
+            else:
+                self.assertEqual(package, tracked[package["id"]])
         self.assertEqual(len(packages), 8)
         self.assertEqual(sum(len(p["public_uris"]) for p in packages), 23)
         for package in packages:
@@ -115,18 +120,25 @@ class NativeCatalogTests(unittest.TestCase):
     def test_all_native_wheels_preserve_upstream_cases_and_real_installed_bindings(self):
         from check_native import check
         sources = {"https://github.com/subactor/" + key: value for key, value in self.sources.items()}
-        candidate = self.root / "historical-catalog"
-        generate_catalog(config(), ROOT, self.sources, candidate)
+        candidate = self.root / "current-catalog"
+        batch = json.loads((ROOT / "selections/native-v3.json").read_text())
+        batch["groups"] = [group for group in batch["groups"] if group["source_id"] != "twin"]
+        account = json.loads((ROOT / "selections/account-twin-v1.json").read_text())
+        account_source = Path(os.environ["URIPROCESS_ACCOUNT_SOURCE"])
+        sources[account["source_repository"] + "@" + account["source_revision"]] = account_source
+        generate_catalog(batch, ROOT, {**self.sources, "account": account_source}, candidate)
         result = check(candidate, sources, self.root / "wheels", sys.executable)
         self.assertEqual(result["status"], "passed")
         self.assertEqual(len(result["packages"]), 8)
         self.assertFalse(result["production_calls"])
         self.assertFalse(result["production_cutover"])
-        self.assertEqual({p["source_repository"] for p in result["packages"]}, set(sources))
+        self.assertEqual({p["source_repository"] for p in result["packages"]},
+                         {"https://github.com/subactor/connectors", "https://github.com/subactor/platform"})
         for package in result["packages"]:
             self.assertGreater(package["upstream_test_count"], 0)
             self.assertEqual(package["test_identity_comparison"], "passed")
             self.assertEqual(package["installed_bindings"], "passed")
+            self.assertEqual(package["installed_callable_exports"], len(package["public_uris"]))
 
     def test_missing_explicit_repository_cannot_produce_verification_success(self):
         from check_native import check
