@@ -1,0 +1,81 @@
+{
+  "schema": "uriprocess.native-selection/v1",
+  "source_repository": "https://github.com/subactor/connectors",
+  "source_revision": "ea82418ed593fa78193975b53951459be4e07d51",
+  "packages": [
+    {
+      "package_root": "urirun-connector-subactor-ticket-lifecycle",
+      "manifest": "urirun_connector_subactor_ticket_lifecycle/connector.manifest.json",
+      "public_uris": [
+        "planfile://subactor/tickets/command/reconcile-lifecycle"
+      ],
+      "files": [
+        "urirun-connector-subactor-ticket-lifecycle/pyproject.toml",
+        "urirun-connector-subactor-ticket-lifecycle/tests/test_ticket_lifecycle.py",
+        "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/__init__.py",
+        "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/connector.manifest.json",
+        "urirun-connector-subactor-ticket-lifecycle/urirun_connector_subactor_ticket_lifecycle/core.py"
+      ]
+    },
+    {
+      "package_root": "urirun-connector-subactor-llm-account-hub",
+      "manifest": "urirun_connector_subactor_llm_account_hub/connector.manifest.json",
+      "public_uris": [
+        "llm-account://host/bindings/query",
+        "llm-account://host/cli/query/status",
+        "llm-account://host/cli/query/plan",
+        "llm-account://host/cli/command/execute"
+      ],
+      "files": [
+        "urirun-connector-subactor-llm-account-hub/pyproject.toml",
+        "urirun-connector-subactor-llm-account-hub/tests/test_llm_account_hub.py",
+        "urirun-connector-subactor-llm-account-hub/urirun_connector_subactor_llm_account_hub/__init__.py",
+        "urirun-connector-subactor-llm-account-hub/urirun_connector_subactor_llm_account_hub/connector.manifest.json",
+        "urirun-connector-subactor-llm-account-hub/urirun_connector_subactor_llm_account_hub/core.py"
+      ]
+    },
+    {
+      "package_root": "urirun-connector-subactor-managed-tunnel",
+      "manifest": "urirun_connector_subactor_managed_tunnel/connector.manifest.json",
+      "public_uris": [
+        "tunnel://host/outbound/query/preflight"
+      ],
+      "files": [
+        "urirun-connector-subactor-managed-tunnel/pyproject.toml",
+        "urirun-connector-subactor-managed-tunnel/tests/test_managed_tunnel.py",
+        "urirun-connector-subactor-managed-tunnel/urirun_connector_subactor_managed_tunnel/__init__.py",
+        "urirun-connector-subactor-managed-tunnel/urirun_connector_subactor_managed_tunnel/connector.manifest.json",
+        "urirun-connector-subactor-managed-tunnel/urirun_connector_subactor_managed_tunnel/core.py"
+      ]
+    },
+    {
+      "package_root": "urirun-connector-subactor-secret-intake",
+      "manifest": "urirun_connector_subactor_secret_intake/connector.manifest.json",
+      "public_uris": [
+        "browser://host/secret-intake/command/request",
+        "browser://host/secret-intake/command/consume"
+      ],
+      "files": [
+        "urirun-connector-subactor-secret-intake/pyproject.toml",
+        "urirun-connector-subactor-secret-intake/tests/test_secret_intake_connector.py",
+        "urirun-connector-subactor-secret-intake/urirun_connector_subactor_secret_intake/__init__.py",
+        "urirun-connector-subactor-secret-intake/urirun_connector_subactor_secret_intake/connector.manifest.json",
+        "urirun-connector-subactor-secret-intake/urirun_connector_subactor_secret_intake/core.py"
+      ]
+    },
+    {
+      "package_root": "urirun-connector-subactor-credential-harvest",
+      "manifest": "urirun_connector_subactor_credential_harvest/connector.manifest.json",
+      "public_uris": [
+        "hub://host/credential/command/harvest"
+      ],
+      "files": [
+        "urirun-connector-subactor-credential-harvest/pyproject.toml",
+        "urirun-connector-subactor-credential-harvest/tests/test_credential_harvest.py",
+        "urirun-connector-subactor-credential-harvest/urirun_connector_subactor_credential_harvest/__init__.py",
+        "urirun-connector-subactor-credential-harvest/urirun_connector_subactor_credential_harvest/connector.manifest.json",
+        "urirun-connector-subactor-credential-harvest/urirun_connector_subactor_credential_harvest/core.py"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "subactor-account-twin",
+  "name": "Subactor Account Digital Twin",
+  "status": "stable",
+  "category": "Autonomy",
+  "summary": "Read-only account, organization, project, ticket and deployment queries over the canonical Subactor account Twin projection.",
+  "description": "Delegates fixed query routes to twin-subactor. The connector neither owns nor rebuilds SQLite, never calls operational source stores directly and cannot accept an upstream URL or credential from an actor.",
+  "requires": ["python>=3.10", "twin-subactor>=0.2.0"],
+  "provenance": "workspace",
+  "language": "python",
+  "uriSchemes": ["twin"],
+  "adapterKinds": ["internal-http", "read-only-projection"],
+  "routes": [
+    "twin://subactor/account/query/combinations",
+    "twin://subactor/account/query/deployments",
+    "twin://subactor/account/query/entities",
+    "twin://subactor/account/query/organizations",
+    "twin://subactor/account/query/project-reconciliations",
+    "twin://subactor/account/query/projects",
+    "twin://subactor/account/query/repositories",
+    "twin://subactor/account/query/sources",
+    "twin://subactor/account/query/summary",
+    "twin://subactor/account/query/tickets"
+  ]
+}

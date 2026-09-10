@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urirun-connector-subactor-account-twin"
+version = "0.1.1"
+description = "Read-only twin:// adapter for the Subactor account Digital Twin"
+requires-python = ">=3.10"
+dependencies = ["urirun>=0.4.14"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.entry-points."urirun.bindings"]
+subactor-account-twin = "urirun_connector_subactor_account_twin.core:bindings"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["urirun_connector_subactor_account_twin*"]
+
+[tool.setuptools.package-data]
+urirun_connector_subactor_account_twin = ["connector.manifest.json"]

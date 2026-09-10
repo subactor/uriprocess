@@ -1,0 +1,27 @@
+{
+  "schema": "uriprocess.native-package/v1",
+  "kind": "python-connector",
+  "public_uris": [
+    "twin://subactor/account/query/combinations",
+    "twin://subactor/account/query/deployments",
+    "twin://subactor/account/query/entities",
+    "twin://subactor/account/query/organizations",
+    "twin://subactor/account/query/project-reconciliations",
+    "twin://subactor/account/query/projects",
+    "twin://subactor/account/query/repositories",
+    "twin://subactor/account/query/sources",
+    "twin://subactor/account/query/summary",
+    "twin://subactor/account/query/tickets"
+  ],
+  "native_manifest": "urirun_connector_subactor_account_twin/connector.manifest.json",
+  "native_distribution": "urirun-connector-subactor-account-twin",
+  "native_version": "0.1.1",
+  "entry_points": {
+    "subactor-account-twin": "urirun_connector_subactor_account_twin.core:bindings"
+  },
+  "dependencies": [
+    "urirun>=0.4.14"
+  ],
+  "source": "provenance.json",
+  "production_binding_verified": false
+}

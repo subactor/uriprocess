@@ -1,0 +1,26 @@
+{
+  "schema": "uriprocess.native-batch-selection/v1",
+  "version": 2,
+  "groups": [
+    {
+      "source_id": "connectors",
+      "selection": "selections/connectors-v4.json",
+      "selection_sha256": "fd1cda7f09e7c86e7d763bca4f8ef5c88954b661acfe451f3540a73c144c89bf"
+    },
+    {
+      "source_id": "platform",
+      "selection": "selections/platform-v1.json",
+      "selection_sha256": "83e44c4bb005f356e98e6182f32f42d0474ebb32322895072fa573bf36242469"
+    },
+    {
+      "source_id": "twin",
+      "selection": "selections/twin-map-v1.json",
+      "selection_sha256": "58dde0318729478214726f3bcb756c3e00c8bbd69b89267ef4e056a00331a677"
+    },
+    {
+      "source_id": "account",
+      "selection": "selections/account-twin-v1.json",
+      "selection_sha256": "2ad4c47dc547c23fb490032611691c3b386055259e6c502ade9117ad8897b8c8"
+    }
+  ]
+}

@@ -20,6 +20,27 @@ from generate import encode, read_object
 
 ROOT = Path(__file__).resolve().parents[1]
 
+INSTALLED_BINDINGS_PROBE = '''import importlib, importlib.metadata, json, pathlib, sys
+target, name, expected = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2], set(json.loads(sys.argv[3]))
+dist = importlib.metadata.distribution(name)
+entries = [ep for ep in dist.entry_points if ep.group == 'urirun.bindings']
+assert entries, 'Installed native entry point missing'
+routes = set()
+for ep in entries:
+    module = importlib.import_module(ep.module)
+    assert pathlib.Path(module.__file__).resolve().is_relative_to(target), 'Source import leaked into installed check'
+    bindings = ep.load()()['bindings']
+    assert not routes.intersection(bindings), 'Duplicate installed URI ownership'
+    for uri, binding in bindings.items():
+        python = binding['python']
+        handler_module = importlib.import_module(python['module'])
+        assert pathlib.Path(handler_module.__file__).resolve().is_relative_to(target), 'Handler import leaked into installed check'
+        handler = getattr(handler_module, python['export'])
+        assert callable(handler), 'Installed handler export is not callable: ' + uri
+    routes.update(bindings)
+assert routes == expected, 'Installed URI bindings differ from native manifest'
+'''
+
 
 def git_file_mode(path):
     # Git and uripack preserve the owner executable bit, not checkout umask/ACL
@@ -147,19 +168,7 @@ def check(root, source, output, builder):
                 installed_report = distribution / "installed-tests.xml"
                 run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--junitxml", str(installed_report), str(test_root)], temporary, installed)
                 matching_test_cases(source_report, installed_report)
-                probe = '''import importlib, importlib.metadata, json, pathlib, sys
-target, name, expected = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2], set(json.loads(sys.argv[3]))
-dist = importlib.metadata.distribution(name)
-entries = [ep for ep in dist.entry_points if ep.group == 'urirun.bindings']
-assert entries, 'Installed native entry point missing'
-routes = set()
-for ep in entries:
-    module = importlib.import_module(ep.module)
-    assert pathlib.Path(module.__file__).resolve().is_relative_to(target), 'Source import leaked into installed check'
-    routes.update(ep.load()()['bindings'])
-assert routes == expected, 'Installed URI bindings differ from native manifest'
-'''
-                run([sys.executable, "-c", probe, str(installed), metadata["native_distribution"],
+                run([sys.executable, "-c", INSTALLED_BINDINGS_PROBE, str(installed), metadata["native_distribution"],
                      json.dumps(package["public_uris"])], temporary, installed,
                     # Loading bindings may initialize twin-map. Keep discovery
                     # offline with a disposable cache; signed conformance is
@@ -175,7 +184,8 @@ assert routes == expected, 'Installed URI bindings differ from native manifest'
                     "test_reports": {label: {"path": str(report.relative_to(output)),
                         "sha256": hashlib.sha256(report.read_bytes()).hexdigest()}
                         for label, report in (("source", source_report), ("installed", installed_report))},
-                    "installed_bindings": "passed", "upstream_git_comparison": "passed"})
+                    "installed_bindings": "passed", "installed_callable_exports": len(package["public_uris"]),
+                    "upstream_git_comparison": "passed"})
     receipt = {"schema": "uriprocess.native-package-verification/v1", "status": "passed", "packages": results,
                "dependency_installation": "preinstalled-runtime; offline-wheel-install-without-dependency-resolution",
                "production_calls": False, "production_cutover": False}
